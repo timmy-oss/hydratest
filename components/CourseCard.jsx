@@ -78,7 +78,7 @@ function CourseCard(props) {
     <div className="rounded-lg  ">
       <div className="relative">
         <Image
-          src="/assets/exam.jpg"
+          src={props.course_cover}
           width={400}
           height={400}
           alt="Course"

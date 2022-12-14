@@ -37,7 +37,7 @@ function Exam(props) {
     if (res.success) {
       setData(res.data.reverse());
 
-      console.log(res.data);
+      // console.log(res.data);
     } else {
       setError(res.error.message);
       console.log(res.error);

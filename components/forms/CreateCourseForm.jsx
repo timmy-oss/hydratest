@@ -8,6 +8,7 @@ import { useState } from "react";
 import { RpcRequest } from "../../lib/rpc";
 import { context } from "../../store/Provisioner";
 import { NotifyCard } from "./SignUpForm";
+import uploadFile from "../../lib/uploadFile";
 
 const FILE_SIZE = 1024 * 1024 * 3;
 const SUPPORTED_FORMATS = [
@@ -48,6 +49,19 @@ export default function CreateCourseForm({ close }) {
 
   async function handleSubmit(values) {
     // console.log(values);
+    setFetching(true);
+
+    // Upload the Cover
+
+    const uploadRes = await uploadFile(values.courseCover);
+
+    if (!uploadRes.success) {
+      setError(uploadRes.errorMessage);
+      console.log(uploadRes.error);
+
+      setFetching(false);
+      return;
+    }
 
     const body = {
       req: {
@@ -55,14 +69,12 @@ export default function CreateCourseForm({ close }) {
           token: store.auth.token,
         },
         body: {
-          courseCover: "https://g.com",
+          courseCover: uploadRes.data.url,
           courseTitle: values.courseTitle,
           allowPublicContributions: values.allowPublicContributions,
         },
       },
     };
-
-    setFetching(true);
 
     const res = await RpcRequest("courses.create", body);
 
@@ -93,9 +105,9 @@ export default function CreateCourseForm({ close }) {
         false
       );
 
+      reader.readAsDataURL(e.target.files[0]);
       setFieldValue("reader", reader);
       setFieldValue(e.target.name, e.target.files[0]);
-      reader.readAsDataURL(e.target.files[0]);
     }
   }
 
