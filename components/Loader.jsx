@@ -6,7 +6,7 @@ function Loader() {
       style={{
         zIndex: 100,
       }}
-      className="fixed  text-center bg-gradient-to-r from-[#5522A9] via-white to-[#5522A9] cursor-not-allowed flex flex-col justify-center items-center  top-0 bottom-0 right-0 left-0 "
+      className="fixed  text-center  bg-white  cursor-not-allowed flex flex-col justify-center items-center  top-0 bottom-0 right-0 left-0 "
     >
       <div role="status ">
         <svg
@@ -25,7 +25,7 @@ function Loader() {
           />
         </svg>
 
-        <div className="  text-[#5823B7] flex flex-row  justify-start">
+        <div className=" hidden text-[#5823B7]  flex-row  justify-start">
           <Image
             priority
             src="/assets/hydratest.png"

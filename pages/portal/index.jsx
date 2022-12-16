@@ -21,7 +21,12 @@ function Exam(props) {
         <title> EEE303 </title>
       </Head>
       <Header />
-      <div className="bg-white  min-h-screen  mt-4 px-4  w-full">
+
+      <main className="md:hidden">
+        <p> Please use a larger screen to access this site. </p>
+      </main>
+
+      <div className="bg-white md:block hidden min-h-screen  mt-4 px-4  w-full">
         <SideMenu />
 
         <div

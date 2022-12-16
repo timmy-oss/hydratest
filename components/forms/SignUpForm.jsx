@@ -15,6 +15,7 @@ export function NotifyCard({
   eMsg = "",
   successText = "Proceed to sign in",
   successCallback = null,
+  errorText = "Close",
 }) {
   const router = useRouter();
 
@@ -35,7 +36,7 @@ export function NotifyCard({
 
       <div
         style={{ fontFamily: "Mulish" }}
-        className="absolute top-[20%] z-10 right-0 left-0 w-[60%] mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2"
+        className="absolute top-[20%] z-10 right-0 left-0 w-[60%] max-w-xl mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2"
       >
         <div className="mx-auto mt-4 flex flex-col justify-center items-center">
           {error ? (
@@ -70,7 +71,7 @@ export function NotifyCard({
           onClick={handleBtn}
           className="block border border-black/40 mt-2 transition-colors mb-2 hover:bg-black/10 w-[60%] mx-auto outline-none text-black/60 px-2 py-1 rounded-lg "
         >
-          {error ? "Close" : successText}
+          {error ? errorText : successText}
         </button>
       </div>
     </>

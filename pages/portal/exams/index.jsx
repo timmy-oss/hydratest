@@ -2,7 +2,7 @@ import Head from "next/head";
 import Header from "../../../components/Header";
 import SideMenu from "../../../components/SideMenu";
 import BackToDashboard from "../../../components/BackToDashboard";
-import CreateCourseForm from "../../../components/forms/CreateCourseForm";
+import CreateExamForm from "../../../components/forms/CreateExamForm";
 import CourseCard, {
   CourseCardPlaceholder,
 } from "../../../components/CourseCard";
@@ -56,7 +56,7 @@ function Exam({ auth }) {
   return (
     <main className="min-h-screen">
       <Head>
-        <title> Courses | {process.env.NEXT_PUBLIC_APP_NAME} </title>
+        <title> Exams | {process.env.NEXT_PUBLIC_APP_NAME} </title>
       </Head>
 
       <main className="md:hidden">
@@ -74,7 +74,7 @@ function Exam({ auth }) {
             <div className="fixed top-0 right-0 left-0 bottom-0 bg-black/40 z-10"></div>
 
             <div className="fixed min-h-[600px] top-10 rounded-lg right-0 left-0  z-10 max-w-md mx-auto bg-white">
-              <CreateCourseForm close={(e) => setShowForm(false)} />
+              <CreateExamForm close={(e) => setShowForm(false)} />
             </div>
           </>
         )}
@@ -103,7 +103,7 @@ function Exam({ auth }) {
             <div className="rounded-lg flex flex-row justify-between items-center p-6 py-12 bg-[#5522A9] w-full ">
               <h2 className="text-3xl text-white font-bold text-left ">
                 {" "}
-                Courses
+                Exams
               </h2>
 
               <div
@@ -112,7 +112,7 @@ function Exam({ auth }) {
               >
                 <span className="inline-block align-bottom text-sm">
                   {" "}
-                  <i className="bi-plus text-xl "></i> Add new course{" "}
+                  <i className="bi-plus text-xl "></i> Add new test
                 </span>
               </div>
             </div>

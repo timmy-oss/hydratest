@@ -22,11 +22,13 @@ function DropDown(props) {
   );
 }
 
-export function CourseCardPlaceholder(props) {
+export function CourseCardPlaceholder({ active }) {
   const [op, setOp] = useState(0.1);
   const [f, setF] = useState(true);
 
   useEffect(() => {
+    if (!active) return;
+
     const step = 0.001;
     const t = setTimeout(() => {
       if (op >= 0.15 && f) {
@@ -49,7 +51,7 @@ export function CourseCardPlaceholder(props) {
     return () => {
       clearTimeout(t);
     };
-  }, [op]);
+  }, [op, active]);
 
   return (
     <div
@@ -91,7 +93,7 @@ function CourseCard(props) {
 
         {showDropDown && <DropDown />}
       </div>
-      <span className="relative bottom-[30%] bg-[#5522A9] leading-8 px-2 py-1  text-white font-bold capitalize left-[5%]">
+      <span className="relative bottom-[30%] rounded bg-[#5522A9] leading-8 px-2 py-1  text-white font-bold capitalize left-[5%]">
         {props.course_title}
       </span>
     </div>

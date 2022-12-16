@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 import LoginForm from "../components/forms/LogInForm";
+import ProtectedRoute from "../components/ProtectedRoute"
 
 const Home = () => {
   return (
@@ -37,4 +38,7 @@ const Home = () => {
   );
 };
 
-export default Home;
+
+
+export default ProtectedRoute({ RenderProp: Home, skipLogin : true  });
+

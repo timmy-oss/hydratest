@@ -9,6 +9,7 @@ import { NotifyCard } from "./SignUpForm";
 import { useRouter } from "next/router";
 import { persistSession } from "../../lib/session";
 import { context } from "../../store/Provisioner";
+import errorCodes from "../../lib/errorCodes";
 
 const yupSchema = Yup.object().shape({
   userId: Yup.string()
@@ -49,6 +50,8 @@ export default function LogInForm() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const { store, dispatch } = useContext(context);
+
+  const { e: redirectError = "", n: redirectTo = "" } = router.query;
 
   async function handleSubmit(values) {
     const body = {
@@ -98,7 +101,9 @@ export default function LogInForm() {
           sMsg="Sign in successful"
           eMsg="Unable to sign in"
           successText="Proceed"
-          successCallback={() => router.replace("/portal/courses")}
+          successCallback={() =>
+            router.replace(redirectTo || "/portal/courses")
+          }
         />
       )}
 
@@ -120,7 +125,7 @@ export default function LogInForm() {
             <Form className="bg-gray-30  p-4 w-[80%] mx-auto ">
               {/* Logo Header  starts  */}
 
-              <div className="my-4 mb-8  text-[#5823B7] flex flex-row  justify-start">
+              <div className="my-4 mb-2  text-[#5823B7] flex flex-row  justify-start">
                 <Image
                   priority
                   src="/assets/hydratest.png"
@@ -137,15 +142,20 @@ export default function LogInForm() {
               {/* Logo Header ends  */}
 
               <FormLoader active={fetching} />
+              {redirectError && (
+                <p className="text-sm bg-red-100 px-3 mb-2 rounded-xl inline-block text-red-500 py-1  text-left">
+                  {errorCodes[redirectError]}{" "}
+                </p>
+              )}
 
               <h2 className="text-3xl font-bold  text-left text-black/80">
-                {" "}
-                Log in
+                {redirectError === "001" ? "Log in to continue" : "Log in"}
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                {" "}
-                Log in with your credentials to take your test.
+                {redirectError === "001"
+                  ? "You will be taken to where you stopped"
+                  : "Log in with your credentials to take your test."}
               </legend>
 
               <div>
