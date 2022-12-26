@@ -8,6 +8,14 @@ export default function (state, action) {
 
       break;
 
+    case "AUTH_EXP_COUNTER":
+      return {
+        ...state,
+        authExpCounter: state.authExpCounter + 1,
+      };
+
+      break;
+
     default:
       return state;
   }

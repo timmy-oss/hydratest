@@ -8,107 +8,92 @@ import { useState } from "react";
 import { RpcRequest } from "../../lib/rpc";
 import { context } from "../../store/Provisioner";
 import { NotifyCard } from "./SignUpForm";
-import uploadFile from "../../lib/uploadFile";
-
-const FILE_SIZE = 1024 * 1024 * 3;
-const SUPPORTED_FORMATS = [
-  "image/jpg",
-  "image/jpeg",
-  "image/webp",
-  "image/png",
-];
+import CustomSelect from "./CustomSelectField";
 
 const yupSchema = Yup.object().shape({
-  courseTitle: Yup.string()
-    .required("Fill in course title")
+  examTitle: Yup.string()
+    .required("Fill in exam title")
     .min(8, "Too short!")
     .max(64, "Uhm, Too long!")
-    .label("Course Title"),
-  courseCover: Yup.mixed()
-    .required("Upload a cover picture")
-    .label("Cover Picture")
-    .test(
-      "fileSize",
-      "File too large (Max. 3MB)",
-      (value) => value && value.size <= FILE_SIZE
-    )
-    .test(
-      "fileFormat",
-      "Unsupported Format (jpg,jpeg,webp and png only!)",
-      (value) => value && SUPPORTED_FORMATS.includes(value.type)
-    )
-    .typeError("Invalid input!"),
+    .label("Exam Title"),
+
+  courseId: Yup.string()
+    .min(8, "Invalid course ID")
+    .required("Select a course")
+    .label("Course"),
+
+  numberOfQuestions: Yup.number()
+    .integer("Whole numbers only")
+    .positive("Negative numbers are not allowed")
+    .min(5, "Too small!")
+    .max(100, "Too much!")
+    .typeError("Numbers only!")
+    .label("Number of Questions")
+    .required("Fill in number of questions"),
+
+  timeAllowed: Yup.number()
+    .integer("Whole numbers only")
+    .positive("Negative numbers are not allowed")
+    .min(2, "Too small!")
+    .max(3600, "Too much!")
+    .typeError("Numbers only!")
+    .label("Time Allowed")
+    .required("Fill in the time allowed"),
 });
 
-export default function CreateCourseForm({ close }) {
+const options = [
+  {
+    name: "Economics",
+    value: "utw7t3g8ug3",
+  },
+  {
+    name: "Mathematics",
+    value: "6t38gyuevc",
+  },
+
+  {
+    name: "English Language",
+    value: "7tiugvs",
+  },
+  {
+    name: "Geography",
+    value: "g76r78gi",
+  },
+];
+
+export default function CreateExamForm({ close }) {
   const { store, dispatch } = useContext(context);
-  const [readerReady, setReaderReady] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+
+  const { auth } = store;
 
   async function handleSubmit(values) {
     // console.log(values);
     setFetching(true);
 
-    // Upload the Cover
-
-    const uploadRes = await uploadFile(values.courseCover);
-
-    if (!uploadRes.success) {
-      setError(uploadRes.errorMessage);
-      console.log(uploadRes.error);
-
-      setFetching(false);
-      return;
-    }
-
     const body = {
       req: {
         auth: {
-          token: store.auth.token,
+          token: auth.token,
         },
         body: {
-          courseCover: uploadRes.data.url,
-          courseTitle: values.courseTitle,
-          allowPublicContributions: values.allowPublicContributions,
+          ...values,
         },
       },
     };
 
-    const res = await RpcRequest("courses.create", body);
+    const res = await RpcRequest("exams.create", body);
 
     if (res.success) {
       setData(res.data);
-
-      // console.log(res.data);
     } else {
       setError(res.error.message);
       console.log(res.error);
     }
 
     setFetching(false);
-  }
-
-  function handleFile(e, setFieldValue) {
-    if (e.target.files.length === 0) {
-      setFieldValue(e.target.name, "");
-      setReaderReady(false);
-    } else {
-      const reader = new FileReader();
-
-      reader.addEventListener(
-        "load",
-        () => {
-          setReaderReady(true);
-        },
-        false
-      );
-
-      reader.readAsDataURL(e.target.files[0]);
-      setFieldValue("reader", reader);
-      setFieldValue(e.target.name, e.target.files[0]);
-    }
   }
 
   return (
@@ -118,8 +103,8 @@ export default function CreateCourseForm({ close }) {
           closeOnError={() => setError(null)}
           id={data && data.id}
           error={error}
-          sMsg="Course added successfully"
-          eMsg="Unable to add course"
+          sMsg="Exam added successfully"
+          eMsg="Unable to add exam."
           successText="Close"
           successCallback={() => {
             setData(null);
@@ -130,14 +115,17 @@ export default function CreateCourseForm({ close }) {
 
       <Formik
         initialValues={{
-          courseTitle: "",
-          allowPublicContributions: true,
-          courseCover: "",
+          examTitle: "",
+          courseId: "",
+          instantResult: true,
+          numberOfQuestions: "",
+          timeAllowed: "",
         }}
         onSubmit={handleSubmit}
         validationSchema={yupSchema}
       >
         {({ errors, isValid, isSubmitting, values, setFieldValue }) => {
+          // console.log(errors);
           return (
             <Form className="bg-gray-30   p-4 w-[80%] mx-auto ">
               {/* Logo Header  starts  */}
@@ -162,17 +150,17 @@ export default function CreateCourseForm({ close }) {
 
               <h2 className="text-xl font-bold  text-left text-black/80">
                 {" "}
-                Add a new test
+                Add a new exam
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                Fill in the details of the new test.
+                Fill in the details of the new exam.
               </legend>
 
               <div>
                 <label
                   className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="courseTitle"
+                  htmlFor="examTitle"
                 >
                   Title
                 </label>
@@ -180,45 +168,104 @@ export default function CreateCourseForm({ close }) {
                   className={
                     "outline-none block  p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
                     cn({
-                      " border-black/20 ": !errors.courseTitle,
-                      "border-red-500/40": errors.courseTitle,
+                      " border-black/20 ": !errors.examTitle,
+                      "border-red-500/40": errors.examTitle,
                     })
                   }
-                  name="courseTitle"
-                  id="courseTitle"
+                  name="examTitle"
+                  id="examTitle"
                   type="text"
-                  placeholder="Technical writing"
+                  placeholder="Name of exam"
                 />
 
                 <p className="block mb-4  text-xs text-red-500">
-                  <ErrorMessage name="courseTitle" />
+                  <ErrorMessage name="examTitle" />
                 </p>
               </div>
 
               <div>
                 <label
                   className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="courseTitle"
+                  htmlFor="courseId"
                 >
                   Course
                 </label>
+
+                <CustomSelect
+                  currentValue={values.courseId}
+                  name="courseId"
+                  options={options}
+                  setValue={(v) => setFieldValue("courseId", v)}
+                  error={errors.courseId}
+                  auth={auth}
+                />
+              </div>
+
+              <div>
+                <label
+                  className="text-xs select-none text-black/60 font-bold"
+                  htmlFor="numberOfQuestions"
+                >
+                  Number of Questions
+                </label>
                 <Field
                   className={
-                    "outline-none block  p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
+                    "outline-none block  text-center p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
                     cn({
-                      " border-black/20 ": !errors.courseTitle,
-                      "border-red-500/40": errors.courseTitle,
+                      " border-black/20 ": !errors.numberOfQuestions,
+                      "border-red-500/40": errors.numberOfQuestions,
                     })
                   }
-                  name="courseTitle"
-                  id="courseTitle"
+                  name="numberOfQuestions"
+                  id="numberOfQuestions"
                   type="text"
-                  placeholder="Technical writing"
+                  placeholder="How many questions"
                 />
 
                 <p className="block mb-4  text-xs text-red-500">
-                  <ErrorMessage name="courseTitle" />
+                  <ErrorMessage name="numberOfQuestions" />
                 </p>
+              </div>
+
+              <div>
+                <label
+                  className="text-xs select-none text-black/60 font-bold"
+                  htmlFor="timeAllowed"
+                >
+                  Time Allowed
+                </label>
+                <Field
+                  className={
+                    "outline-none block text-center p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
+                    cn({
+                      " border-black/20 ": !errors.timeAllowed,
+                      "border-red-500/40": errors.timeAllowed,
+                    })
+                  }
+                  name="timeAllowed"
+                  id="timeAllowed"
+                  type="text"
+                  placeholder="Time in minutes"
+                />
+
+                <p className="block mb-4  text-xs text-red-500">
+                  <ErrorMessage name="timeAllowed" />
+                </p>
+              </div>
+
+              <div className="flex flex-row  space-x-4  py-4">
+                <Field
+                  className="outline-none  inline-block  align-baseline"
+                  name="instantResult"
+                  id="instantResult"
+                  type="checkbox"
+                />
+                <label
+                  className="text-xs select-none text-black/60 font-bold"
+                  htmlFor="instantResult"
+                >
+                  Show exam results instantly
+                </label>
               </div>
 
               <div className="mt-8">

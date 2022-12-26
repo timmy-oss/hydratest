@@ -26,7 +26,7 @@ function DropDown(props) {
   );
 }
 
-export function CourseCardPlaceholder({ active }) {
+export function ExamCardPlaceholder({ active }) {
   const [op, setOp] = useState(0.1);
   const [f, setF] = useState(true);
 
@@ -67,7 +67,7 @@ export function CourseCardPlaceholder({ active }) {
   );
 }
 
-function CourseCard(props) {
+function ExamCard(props) {
   const [showDropDown, setDropDown] = useState(false);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ function CourseCard(props) {
     <div className="rounded-lg  ">
       <div className="relative max-h-[400px]">
         <Image
-          src={props.course_cover}
+          src={props.course.course_cover}
           width={400}
           height={400}
           alt="Course"
@@ -97,11 +97,26 @@ function CourseCard(props) {
 
         {showDropDown && <DropDown />}
       </div>
-      <span className="relative bottom-[30%] rounded bg-[#5522A9] leading-8 px-2 py-1  text-white font-bold capitalize left-[5%]">
-        {props.course_title}
-      </span>
+
+      <div className="relative bg-black/40 bottom-0 flex flex-col space-y-2 justify-center items-center left-[5%]">
+
+        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold capitalize ">
+          {props.exam_title}
+        </span>
+
+
+        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold  ">
+          {props.time_allowed} minutes
+        </span>
+
+        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold  ">
+          {props.number_of_questions} questions
+        </span>
+
+
+      </div>
     </div>
   );
 }
 
-export default CourseCard;
+export default ExamCard;

@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { loadSession } from "../lib/session";
+import { loadSession, removeSession } from "../lib/session";
 import { context } from "../store/Provisioner";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -87,6 +87,7 @@ async function validateAuth(store, loadedSession = null, dispatch) {
         payload: {
           token: loadedSession.token,
           user: tokenInfo.data.user,
+          flags: loadedSession.flags,
         },
       });
 
@@ -95,6 +96,8 @@ async function validateAuth(store, loadedSession = null, dispatch) {
         user: tokenInfo.data.user,
       };
     }
+
+    removeSession();
   }
 
   return false;
@@ -126,7 +129,7 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
     if (!router.isReady) return;
 
     authPipeline();
-  }, [router.isReady]);
+  }, [router.isReady, store.auth.authExpCounter]);
 
   if (authStage === "checking") {
     return <AuthenticationPendingPage />;

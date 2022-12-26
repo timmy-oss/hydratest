@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { persistSession } from "../../lib/session";
 import { context } from "../../store/Provisioner";
 import errorCodes from "../../lib/errorCodes";
+import Link from "next/link";
 
 const yupSchema = Yup.object().shape({
   userId: Yup.string()
@@ -18,23 +19,25 @@ const yupSchema = Yup.object().shape({
     .max(7, "Uhm, that ID isn't valid.")
     .label("User ID")
     .test("is-valid-id", "Uhm, that ID isn't valid.", (v) => {
-      const id = v ? v.toUpperCase() : "";
+      const uid = v || "";
 
-      if (id.length !== 7) {
+      if (uid.length !== 7) {
         return false;
       }
 
-      if (id.charAt(0) !== "U") {
+      if (uid.charAt(0).toUpperCase() !== "U") {
         return false;
       }
 
-      const slice = id.slice(1);
+      const slice = uid.slice(1);
 
-      if (isInteger(slice)) {
-        return true;
+      for (let i = 0; i < slice.length; ++i) {
+        if (!isInteger(slice.charAt(i))) {
+          return false;
+        }
       }
 
-      return false;
+      return true;
     }),
 
   password: Yup.string()
@@ -71,7 +74,9 @@ export default function LogInForm() {
 
       // Persist the session
 
-      persistSession(res.data);
+      if (values.rememberMe) {
+        persistSession(res.data);
+      }
 
       dispatch({
         type: "SET_AUTH",
@@ -224,6 +229,14 @@ export default function LogInForm() {
                 >
                   Keep me signed in
                 </label>
+              </div>
+
+              <div className="my-2 flex flex-row justify-end">
+                <Link href="/sign-up">
+                  <p className="text-sm inline-block text-sky-700/60 underline">
+                    Register a new account{" "}
+                  </p>
+                </Link>
               </div>
 
               <div className="mt-8">

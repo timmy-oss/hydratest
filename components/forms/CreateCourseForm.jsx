@@ -122,7 +122,7 @@ export default function CreateCourseForm({ close }) {
           eMsg="Unable to add course"
           successText="Close"
           successCallback={() => {
-            setData(null);
+            setData(null);  
             close();
           }}
         />

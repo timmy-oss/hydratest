@@ -6,6 +6,7 @@ import cn from "classnames";
 import FormLoader from "./FormLoader";
 import { RpcRequest } from "../../lib/rpc";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 export function NotifyCard({
   id = "U000000",
@@ -318,6 +319,14 @@ export default function LogInForm() {
               <p className="block mb-2  text-xs text-red-500">
                 <ErrorMessage name="agree" />
               </p>
+
+              <div className="my-2 flex flex-row justify-end">
+                <Link href="/sign-in">
+                  <p className="text-sm inline-block text-sky-700/60 underline">
+                    Log in to an existing account
+                  </p>
+                </Link>
+              </div>
 
               <div className="mt-8">
                 <input

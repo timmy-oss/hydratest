@@ -3,9 +3,7 @@ import Header from "../../../components/Header";
 import SideMenu from "../../../components/SideMenu";
 import BackToDashboard from "../../../components/BackToDashboard";
 import CreateExamForm from "../../../components/forms/CreateExamForm";
-import CourseCard, {
-  CourseCardPlaceholder,
-} from "../../../components/CourseCard";
+import ExamCard, { ExamCardPlaceholder } from "../../../components/ExamCard";
 import { useState, useContext, useEffect } from "react";
 import { context } from "../../../store/Provisioner";
 import ProtectedRoute from "../../../components/ProtectedRoute";
@@ -21,7 +19,7 @@ function Exam({ auth }) {
 
   const router = useRouter();
 
-  async function fetchCourses() {
+  async function fetchExams() {
     // console.log(auth);
 
     const body = {
@@ -35,7 +33,7 @@ function Exam({ auth }) {
 
     setFetching(true);
 
-    const res = await RpcRequest("courses.list", body);
+    const res = await RpcRequest("exams.list", body);
 
     if (res.success) {
       setData(res.data.reverse());
@@ -50,7 +48,7 @@ function Exam({ auth }) {
   }
 
   useEffect(() => {
-    fetchCourses();
+    fetchExams();
   }, [showForm, error]);
 
   return (
@@ -112,7 +110,7 @@ function Exam({ auth }) {
               >
                 <span className="inline-block align-bottom text-sm">
                   {" "}
-                  <i className="bi-plus text-xl "></i> Add new test
+                  <i className="bi-plus text-xl "></i> Add new exam
                 </span>
               </div>
             </div>
@@ -123,10 +121,10 @@ function Exam({ auth }) {
           <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-2  gap-x-4 mt-8">
             {data && data.length
               ? data.map((c, i) => {
-                  return <CourseCard {...c} key={i} />;
+                  return <ExamCard {...c} key={i} />;
                 })
               : [1, 2, 3, 4, 5, 6, 7, 8, 9].map((a, i) => {
-                  return <CourseCardPlaceholder key={i} active={fetching} />;
+                  return <ExamCardPlaceholder key={i} active={fetching} />;
                 })}
           </div>
         </div>
