@@ -1,30 +1,8 @@
 import React from "react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 
-function DropDown(props) {
-  return (
-    <div className="absolute top-0 z-20 shadow-xl border border-black/20 rounded-lg right-0 bg-white/40 min-h-[100px] min-w-[120px] px-2 py-4">
-      <ul className="text-center text-base space-y-2  ">
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          View
-        </li>
-
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          Archive
-        </li>
-
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          Share
-        </li>
-
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          Remove
-        </li>
-      </ul>
-    </div>
-  );
-}
 
 export function ExamCardPlaceholder({ active }) {
   const [op, setOp] = useState(0.1);
@@ -69,6 +47,15 @@ export function ExamCardPlaceholder({ active }) {
 
 function ExamCard(props) {
   const [showDropDown, setDropDown] = useState(false);
+  const router = useRouter()
+
+  function toExam() {
+
+    router.push(`/exams/${props.id}`)
+
+
+
+  }
 
   useEffect(() => {
     if (!showDropDown) return;
@@ -82,7 +69,7 @@ function ExamCard(props) {
 
   return (
     <div className="rounded-lg  ">
-      <div className="relative max-h-[400px]">
+      <div className=" relative rounded-lg border">
         <Image
           src={props.course.course_cover}
           width={400}
@@ -91,29 +78,39 @@ function ExamCard(props) {
           className="rounded-lg object-cover"
         />
         <i
-          onClick={(e) => setDropDown(!showDropDown)}
-          className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/20 duration-300  transition-colors rounded-full px-2 py-1 "
+          onClick={toExam}
+          className="bi-arrow-right  text-sm absolute bottom-[2%] right-[2%] mt-2 cursor-pointer hover:text-black bg-black/90 duration-300 hover:bg-white/70 text-white  transition-colors rounded-full px-2 py-1 "
         ></i>
 
-        {showDropDown && <DropDown />}
-      </div>
 
-      <div className="relative bg-black/40 bottom-0 flex flex-col space-y-2 justify-center items-center left-[5%]">
+        <div className="absolute text-justify py-2 bottom-0  flex flex-col   space-y-1  px-2  rounded-bl-lg rounded-tr-lg left-0">
 
-        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold capitalize ">
-          {props.exam_title}
+          <span className=" inline-block rounded-lg px-2 py-1 bg-[#5522A9]/80  self-start    text-white  text-xs font-bold capitalize ">
+            <i className="bi-laptop"></i> {" "}&nbsp;
+
+            {props.exam_title} 
+        </span>
+
+          <span className=" inline-block rounded-lg px-2 py-1 bg-[#5522A9]/80  self-start    text-white  text-xs font-bold capitalize ">
+            <i className="bi-card-heading"></i> {" "}&nbsp;
+
+            {props.course.course_title}
+          </span>
+
+
+          <span className="  inline-block rounded-lg px-2 py-1 bg-[#5522A9]/80   self-start    text-white  text-xs font-bold capitalize   ">
+            <i className="bi-clock"></i> {" "}&nbsp;
+            {props.time_allowed} minutes
+        </span>
+
+          <span className="  inline-block rounded-lg px-2 py-1 bg-[#5522A9]/80  self-start     text-white  text-xs font-bold capitalize   ">
+            <i className="bi-123"></i> {" "}&nbsp;
+
+            {props.number_of_questions} questions
         </span>
 
 
-        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold  ">
-          {props.time_allowed} minutes
-        </span>
-
-        <span className=" rounded  leading-8 px-2 py-1  text-white font-bold  ">
-          {props.number_of_questions} questions
-        </span>
-
-
+        </div>
       </div>
     </div>
   );

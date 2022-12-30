@@ -1,4 +1,4 @@
-import React from "react";
+import Link from "next/link"
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -6,19 +6,22 @@ function DropDown(props) {
   return (
     <div className="absolute top-0 z-20 shadow-xl border border-black/20 rounded-lg right-0 bg-white/40 min-h-[100px] min-w-[120px] px-2 py-4">
       <ul className="text-center text-base space-y-2  ">
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          View
-        </li>
 
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
+
+        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
           Archive
         </li>
 
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
-          Share
+
+        <Link href={`/portal/courses/${props.id}?action=contribute`}>
+
+          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
+            Contribute
         </li>
 
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg">
+        </Link>
+
+        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
           Remove
         </li>
       </ul>
@@ -82,7 +85,7 @@ function CourseCard(props) {
 
   return (
     <div className="rounded-lg  ">
-      <div className="relative max-h-[400px]">
+      <div className="relative  border rounded-lg">
         <Image
           src={props.course_cover}
           width={400}
@@ -90,12 +93,17 @@ function CourseCard(props) {
           alt="Course"
           className="rounded-lg object-cover"
         />
-        <i
-          onClick={(e) => setDropDown(!showDropDown)}
-          className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/20 duration-300  transition-colors rounded-full px-2 py-1 "
-        ></i>
+        {
+          !showDropDown
 
-        {showDropDown && <DropDown />}
+          &&
+        <i
+              onClick={(e) => setDropDown(true)}
+              className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/50 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
+        ></i>
+        }
+
+        {showDropDown && <DropDown {...props} />}
       </div>
       <span className="relative bottom-[30%] rounded bg-[#5522A9] leading-8 px-2 py-1  text-white font-bold capitalize left-[5%]">
         {props.course_title}

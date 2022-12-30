@@ -1,6 +1,7 @@
 import { useReducer, useState, createContext, useEffect } from "react";
 import authReducer from "./reducers/authReducer";
 import { useRouter } from "next/router";
+import RouterLoader from "../components/RouterLoader"
 
 const initialState = {
   auth: {
@@ -21,6 +22,47 @@ function Provisioner(props) {
   const [store, dispatch] = useReducer(rootReducer, initialState);
   const router = useRouter();
   const [n, setN] = useState(false);
+  const [showRouterLoader, setShowRouterLoader] = useState(false)
+
+
+
+  // Handle Route change start 
+  function routeStart(url) {
+
+    setShowRouterLoader(true);
+
+  }
+
+  // Handle Route change end
+  function routeEnd(url) {
+    setShowRouterLoader(false);
+
+  }
+
+
+  // Router events 
+
+  useEffect(() => {
+
+    router.events.on("routeChangeStart", routeStart);
+    router.events.on("routeChangeComplete", routeEnd);
+
+
+    return () => {
+
+
+      router.events.off("routeChangeStart", routeStart);
+      router.events.off("routeChangeComplete", routeEnd);
+
+
+    }
+
+
+  }, [])
+
+
+
+
 
   // Authentication Expiry Checker
   useEffect(() => {
@@ -53,6 +95,9 @@ function Provisioner(props) {
 
   return (
     <context.Provider value={{ store, dispatch }}>
+
+      <RouterLoader active={showRouterLoader} />
+
       {props.children}
     </context.Provider>
   );

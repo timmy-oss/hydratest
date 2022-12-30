@@ -7,6 +7,7 @@ import FormLoader from "./FormLoader";
 import { RpcRequest } from "../../lib/rpc";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import CopyToClipboard from "react-copy-to-clipboard"
 
 export function NotifyCard({
   id = "U000000",
@@ -19,6 +20,7 @@ export function NotifyCard({
   errorText = "Close",
 }) {
   const router = useRouter();
+  const [copied, setCopied] = useState(false);
 
   function handleBtn(e) {
     if (error) {
@@ -60,8 +62,29 @@ export function NotifyCard({
               <>
                 Your account has been created. Your ID is{" "}
                 <span className="px-3 py-1 text-sm bg-black/5 text-black/60 rounded-lg">
-                  {id}
-                  <i className="bi-clipboard cursor-pointer ml-1 text-black/60 inline-block"></i>
+                    {id}
+                    <CopyToClipboard text={id} onCopy={() => {
+                      setCopied(true);
+                      let t;
+                      t = setTimeout(() => {
+                        setCopied(false);
+
+                        clearTimeout(t)
+                      }, 5000)
+                    }}>
+                      {
+                        copied ?
+                          <i className="bi-check2 cursor-pointer ml-1 text-black/60 inline-block"></i>
+
+                          :
+
+
+                          <i className="bi-clipboard cursor-pointer ml-1 text-black/60 inline-block"></i>
+                      }
+
+                    </CopyToClipboard>
+
+
                 </span>
               </>
             )}

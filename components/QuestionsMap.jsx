@@ -1,81 +1,21 @@
 import React from "react";
 import cn from "classnames";
 
-function QuestionsMap() {
+function QuestionsMap(props) {
+
+  const boxes = [];
+
+
+  for (let i = 0; i < props.number_of_questions; ++i) {
+    boxes.push(i)
+  }
+
   return (
     <div className="mt-8 flex flex-row flex-wrap  ">
-      {[
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        ,
-        1,
-        ,
-        1,
-        1,
-        ,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        ,
-        1,
-        ,
-        1,
-        1,
-        ,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        ,
-        1,
-        ,
-        1,
-        1,
-        ,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        2,
-      ].map((a, i) => (
+
+
+
+      {boxes.map((a, i) => (
         <div
           key={i}
           className={

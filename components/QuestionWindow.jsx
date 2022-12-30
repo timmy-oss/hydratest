@@ -44,8 +44,8 @@ function QuestionWindow() {
         </div>
       </div>
       <hr className="mt-4" />
-      <div className="  flex flex-row justify-start  ">
-        <div className="w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
+      <div className="  flex flex-row justify-between  ">
+        <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
           <button
             className={
               " capitalize bg-[#5A5AB5] px-6 rounded-lg hover:bg-[#5A5AB5]/90 rounded-l-md transition-colors duration-300 text-white py-2  block   "
@@ -65,6 +65,35 @@ function QuestionWindow() {
             <i className="bi-fast-forward"></i>
           </button>
         </div>
+
+
+        <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
+          <span
+            className={
+              " capitalize xl:hidden bg-green-500 px-2 rounded-lg  rounded-l-md transition-colors duration-300 text-white py-2  block   "
+            }
+
+          >
+            <i className="bi-arrow-sync"></i>&nbsp; Attempted &nbsp; <span className="bg-white  text-sm text-green-500 px-2 py-1 rounded-full"> 0 </span>
+          </span>
+          <button
+            className={
+              " capitalize xl:hidden bg-blue-500 px-6 rounded-lg hover:bg-blue-500/90 rounded-l-md transition-colors duration-300 text-white py-2  block   "
+            }
+            role="button"
+          >
+            <i className="bi-arrow-clockwise"></i>&nbsp; Restart
+          </button>
+          <button
+            className={
+              " capitalize xl:hidden bg-red-500 px-6 rounded-lg hover:bg-red-500/90 rounded-l-md transition-colors duration-300 text-white py-2  block   "
+            }
+            role="button"
+          >
+            <i className="bi-check2-circle"></i>&nbsp; Submit
+          </button>
+        </div>
+
       </div>
     </div>
   );

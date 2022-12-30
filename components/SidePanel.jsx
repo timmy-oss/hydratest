@@ -1,13 +1,13 @@
 import React from "react";
 
-function SidePanel() {
+function SidePanel(props) {
   return (
     <div className="order-2 w-[40%] select-none hidden xl:block min-h-[600px] self-start mt-20 shadow-xl px-4 rounded-lg mr-3 border pt-4">
       <div>
-        <p className="text-lg text-[#241142]   font-bold">Test</p>
+        <p className="text-lg text-[#241142]   font-bold">Exam</p>
 
         <h3 className="text-base px-6  py-3 mt-4  text-black/40 bg-gray-100 rounded-md text-left">
-          1st Semester Exam
+          {props.exam_title}
         </h3>
       </div>
 
@@ -23,7 +23,7 @@ function SidePanel() {
               Questions
             </p>
             <button className="rounded-xl flex-1 cursor-default bg-[#5522A9] text-white text-base font-bold">
-              70
+              {props.number_of_questions}
             </button>
           </div>
         </div>
@@ -38,7 +38,7 @@ function SidePanel() {
               Attempted
             </p>
             <button className="rounded-xl flex-1 cursor-default  bg-[#5522A9] text-white text-base font-bold">
-              59
+              0
             </button>
           </div>
         </div>
@@ -63,10 +63,10 @@ function SidePanel() {
       </div>
 
       <div className="w-full mt-4 space-y-4">
-        <button className="rounded-xl transition-colors duration-300 hover:bg-[#5522A9]/70 block w-full p-3  border bg-[#5522A9] text-white text-base font-bold">
+        <button className="rounded-xl transition-colors duration-300 hover:bg-red-500/80 block w-full p-3  border bg-red-500 text-white text-base font-bold">
           Submit
         </button>
-        <button className="rounded-xl transition-colors duration-300 hover:bg-gray-200 block w-full p-3 text-[#5522A9] border border-[#5522A9] bg-white text-base font-bold">
+        <button className="rounded-xl transition-colors duration-300 hover:bg-blue-200 block w-full p-3 text-blue-500 border border-blue-500 bg-white text-base font-bold">
           Restart
         </button>
       </div>

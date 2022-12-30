@@ -2,6 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import LoginForm from "../components/forms/LogInForm";
 import ProtectedRoute from "../components/ProtectedRoute"
+import InvalidViewport from "../components/InvalidViewportSize"
 
 const Home = () => {
   return (
@@ -10,9 +11,7 @@ const Home = () => {
         <title> Sign In | {process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
 
-      <main className="md:hidden">
-        <p> Please use a larger screen to access this site. </p>
-      </main>
+      <InvalidViewport />
 
       <main className="min-h-screen w-full  flex-row bg-white justify-between items-stretch hidden md:flex">
         <div className="w-[50%] border-r-4 border-[#5522A9]/60 xl:w-[45%] bg-white 2xl:w-[40%]  min-h-full self-stretch ">

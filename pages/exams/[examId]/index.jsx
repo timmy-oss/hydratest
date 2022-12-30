@@ -1,18 +1,86 @@
-import React from "react";
 import Head from "next/head";
 import Header from "../../../components/Header";
 import Image from "next/image";
+import ProtectedRoute from "../../../components/ProtectedRoute";
+import { useState, useEffect } from "react"
+import { useRouter } from "next/router";
+import { RpcRequest } from "../../../lib/rpc";
+import Loader from "../../../components/Loader2";
+import InvalidViewportSize from "../../../components/InvalidViewportSize";
 
-function intro() {
+function Intro({ auth }) {
+
+  const router = useRouter();
+  const [exam, setExam] = useState(null);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(false)
+
+
+  function begin() {
+
+    router.replace(`/exams/${exam.id}/controller?session=${"session_key"}`)
+  }
+
+  async function getExam() {
+    setFetching(true);
+
+    const body = {
+      req: {
+        auth: {
+          token: auth.token,
+        },
+        body: {
+          id: router.query.examId
+        },
+      },
+    };
+
+    const res = await RpcRequest("exams.get_one", body);
+
+    if (res.success) {
+      setExam(res.data);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+
+    setFetching(false);
+  }
+
+
+  useEffect(() => {
+
+    if (!router.isReady) return;
+
+
+    getExam();
+
+  }, [router.isReady])
+
+
+
+  if (fetching || !exam && !error) return <Loader />
+
+
+  if (error) return <p> {error} </p>
+
+
+
   return (
-    <main className="min-h-screen w-full ">
+    <main className="flex min-h-screen flex-col items-center justify-center ">
       <Head>
-        <title> EEE303 </title>
+        <title> {exam ? exam.exam_title : router.isReady && router.query.examId} </title>
       </Head>
 
       <Header />
 
-      <div className="flex min-h-screen bg-no-repeat bg-fixed bg-center bg-clip-content bg-cover bg-[url('/assets/exam2.jpg')] flex-col bg-white justify-center items-center w-full">
+      <InvalidViewportSize />
+
+      <div className=" hidden md:flex min-h-screen bg-no-repeat bg-fixed bg-center bg-clip-content bg-cover bg-[url('/assets/exam2.jpg')] flex-col bg-white justify-center items-center w-full">
+
+
+
+
         <div className=" mt-8  text-[#5823B7] flex flex-row  justify-start">
           <Image
             priority
@@ -30,11 +98,11 @@ function intro() {
         <div className=" max-w-xl bg-white/30 min-w-[300px] min-h-[400px]   shadow-xl px-4 rounded-lg  border pt-4">
           <div>
             <p className="text-lg text-[#241142]  hover:cursor-pointer font-bold">
-              Test
+              Exam
             </p>
 
-            <h3 className="text-base px-6 py-3 mt-4  text-black/40 bg-gray-100 rounded-md text-left">
-              1st Semester Exam
+            <h3 className="text-base px-6 py-3 mt-4 capitalize text-black/40 bg-gray-100 rounded-md text-left">
+              {exam.exam_title}
             </h3>
           </div>
           <div className="mt-4">
@@ -42,8 +110,8 @@ function intro() {
               Course
             </p>
 
-            <h3 className="text-base px-6 py-3 mt-4  text-black/40 bg-gray-100 rounded-md text-left">
-              Electronics Engineering I
+            <h3 className="text-base px-6 py-3 mt-4 capitalize text-black/40 bg-gray-100 rounded-md text-left">
+              {exam.course.course_title}
             </h3>
           </div>
 
@@ -53,7 +121,7 @@ function intro() {
             </p>
 
             <h3 className="text-base px-6 py-3 mt-4  text-black/40 bg-gray-100 rounded-md text-left">
-              70
+              {exam.number_of_questions}
             </h3>
           </div>
 
@@ -63,12 +131,12 @@ function intro() {
             </p>
 
             <h3 className="text-base px-6 py-3 mt-4  text-black/40 bg-gray-100 rounded-md text-left">
-              45 Minutes
+              {exam.time_allowed} Minutes
             </h3>
           </div>
 
           <div className=" mt-4 mb-2 w-full">
-            <button className="rounded-lg w-full block hover:bg-[#5522A9]/90 transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold">
+            <button onClick={begin} className="rounded-lg w-full block hover:bg-[#5522A9]/90 transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold">
               Begin
             </button>
           </div>
@@ -78,4 +146,5 @@ function intro() {
   );
 }
 
-export default intro;
+
+export default ProtectedRoute({ RenderProp: Intro });

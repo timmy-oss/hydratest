@@ -6,14 +6,14 @@ import CreateCourseForm from "../../../components/forms/CreateCourseForm";
 import CourseCard, {
   CourseCardPlaceholder,
 } from "../../../components/CourseCard";
-import { useState, useContext, useEffect } from "react";
-import { context } from "../../../store/Provisioner";
+import { useState, useEffect } from "react";
+import InvalidViewportSize from "../../../components/InvalidViewportSize";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import { RpcRequest } from "../../../lib/rpc";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import { useRouter } from "next/router";
 
-function Exam({ auth }) {
+function Courses({ auth }) {
   const [showForm, setShowForm] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
@@ -54,14 +54,12 @@ function Exam({ auth }) {
   }, [showForm, error]);
 
   return (
-    <main className="min-h-screen">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <Head>
         <title> Courses | {process.env.NEXT_PUBLIC_APP_NAME} </title>
       </Head>
 
-      <main className="md:hidden">
-        <p> Please use a larger screen to access this site. </p>
-      </main>
+      <InvalidViewportSize />
 
       <div className="bg-white  min-h-screen hidden md:block mt-4 px-4  w-full">
         <SideMenu />
@@ -135,4 +133,4 @@ function Exam({ auth }) {
   );
 }
 
-export default ProtectedRoute({ RenderProp: Exam });
+export default ProtectedRoute({ RenderProp: Courses });

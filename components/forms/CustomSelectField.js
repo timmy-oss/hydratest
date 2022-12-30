@@ -10,7 +10,14 @@ export default function CustomSelect({
   error: fError,
   setValue,
   options,
+  showNullOption = true,
   auth,
+  params = {
+    rpcMethod: "courses.list",
+    nameKey: "course_title",
+    valueKey: "id",
+    data: null,
+  }
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(defaultValue);
@@ -26,12 +33,23 @@ export default function CustomSelect({
   }
 
   function setI(v) {
+
+    if (selected[params.nameKey] === v[params.nameKey] && selected[params.valueKey] === v[params.valueKey]) {
+      return
+    }
+
+    // console.log("triggered")
     setSelected(v);
-    setValue(v.id);
+    setValue(v[params.valueKey]);
   }
 
   async function fetchCourses() {
     // console.log(auth);
+
+    if (params.data) {
+      setData(params.data);
+      return
+    }
 
     const body = {
       req: {
@@ -44,7 +62,7 @@ export default function CustomSelect({
 
     setFetching(true);
 
-    const res = await RpcRequest("courses.list", body);
+    const res = await RpcRequest(params.rpcMethod, body);
 
     if (res.success) {
       setData(res.data.reverse());
@@ -78,7 +96,7 @@ export default function CustomSelect({
         }
       >
         <span className="text-sm  first-letter:uppercase block w-full lg:w-[80%] truncate  text-black/60 ">
-          {selected ? selected.course_title : "Select an option"}
+          {selected ? selected[params.nameKey] : "Select an option"}
         </span>
 
         <i className="bi-chevron-down text-lg text-black/60 absolute top-[25%] right-[5%]" />
@@ -91,7 +109,7 @@ export default function CustomSelect({
               "absolute bg-white px-2 rounded-md  w-full py-2 overflow-y-auto hide-scroll-bar z-10 top-[95%]  left-0 border shadow-xl min-h-[100px] max-h-[180px] space-y-1 "
             }
           >
-            {!fetching && (
+            {!fetching && showNullOption && (
               <div
                 className="truncate cursor-pointer hover:bg-gray-200 px-2 py-1 rounded"
                 onClick={(e) => setI("")}
@@ -111,7 +129,7 @@ export default function CustomSelect({
                     onClick={(e) => setI(c)}
                   >
                     <span className="capitalize text-black/60 truncate  text-sm ">
-                      {c.course_title}
+                      {c[params.nameKey]}
                     </span>
                   </div>
                 );
@@ -132,7 +150,7 @@ export default function CustomSelect({
       </div>
       <p className="block my-4  text-xs text-red-500">
         {error || fError}
-        <ErrorMessage name="courseId" />
+        <ErrorMessage name={name} />
       </p>
     </>
   );

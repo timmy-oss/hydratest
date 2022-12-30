@@ -12,7 +12,7 @@ function AuthenticationPendingPage(props) {
   return (
     <div>
       <Head>
-        <title> Checking... | {process.env.NEXT_PUBLIC_APP_NAME} </title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
 
       <main className="min-h-screen flex flex-col  justify-center items-center">
@@ -126,10 +126,9 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
   }
 
   useEffect(() => {
-    if (!router.isReady) return;
 
     authPipeline();
-  }, [router.isReady, store.auth.authExpCounter]);
+  }, [store.auth.authExpCounter]);
 
   if (authStage === "checking") {
     return <AuthenticationPendingPage />;

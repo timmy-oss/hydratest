@@ -1,59 +1,114 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import Head from "next/head";
 import Header from "../../../components/Header";
 import QuestionsMap from "../../../components/QuestionsMap";
 import SidePanel from "../../../components/SidePanel";
 import QuestionWindow from "../../../components/QuestionWindow";
+import Timer from "../../../components/Timer";
+import ProtectedRoute from "../../../components/ProtectedRoute";
+import Loader from "../../../components/Loader2";
+import { useRouter } from "next/router";
+import { RpcRequest } from "../../../lib/rpc";
+import Link from "next/link"
+import InvalidViewportSize from "../../../components/InvalidViewportSize";
 
-function Exam(props) {
+function Controller({ auth }) {
+
+  const router = useRouter()
+  const [exam, setExam] = useState(null);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(false)
+
+
+  async function getExam() {
+    setFetching(true);
+
+    const body = {
+      req: {
+        auth: {
+          token: auth.token,
+        },
+        body: {
+          id: router.query.examId
+        },
+      },
+    };
+
+    const res = await RpcRequest("exams.get_one", body);
+
+    if (res.success) {
+      setExam(res.data);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+
+    setFetching(false);
+  }
+
+
+  useEffect(() => {
+
+    if (!router.isReady) return;
+
+
+    getExam();
+
+  }, [router.isReady])
+
+
+
+  if (fetching || !exam && !error) return <Loader />
+
   return (
-    <main className="min-h-screen">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <Head>
-        <title> EEE303 </title>
+        <title> {exam ? exam.exam_title : router.isReady && router.query.examId} </title>
       </Head>
       <Header />
-      <div className="bg-white min-h-screen flex flex-row  justify-around items-center mt-4">
-        <SidePanel />
+
+
+      <InvalidViewportSize />
+
+      <div className="bg-white min-h-screen hidden  md:flex flex-row  justify-around items-center mt-4">
+        <SidePanel {...exam} />
 
         <div
           style={{ fontFamily: "Montserrat" }}
           className=" px-6 mt-20 self-start  order-1"
         >
+
+          <Link href="/portal">
           <p
             style={{ fontFamily: "Roboto" }}
             className="text-xs text-[#5522A9] hover:cursor-pointer font-bold"
           >
-            {" "}
+
             <i className="bi-arrow-left text-xs text-[#5522A9]"> </i> &nbsp;
-            Back to courses{" "}
-          </p>
+              Back to portal
+            </p>
+          </Link>
           <div className="flex flex-row justify-between">
             <h2
               style={{ fontFamily: "Mulish" }}
-              className="text-3xl mt-4 font-bold text-[#241142] text-left"
+              className="text-3xl mt-4 capitalize font-bold text-[#241142] text-left"
             >
-              {" "}
-              Electronics Engineering I
+              {exam.course.course_title}
             </h2>
 
-            <div className="self-center select-none">
-              <div className="flex flex-row  text-2xl bg-[#5522A9] text-white py-2 transform rotate-3 shadow-[#5522A9]   shadow-2xl px-4 rounded-xl">
-                <span> 02 </span> &nbsp;:&nbsp; <span> 42 </span> &nbsp;:&nbsp;{" "}
-                <span> 12 </span>
-              </div>
-            </div>
+            <Timer targetTime={exam.time_allowed} />
           </div>
           <p className="text-sm text-[#241142]  mt-4 hover:cursor-pointer font-bold">
-            Question 25
+            Question 1
           </p>
 
-          <QuestionWindow />
+          <QuestionWindow {...exam} />
 
-          <QuestionsMap />
+          <QuestionsMap {...exam} />
         </div>
       </div>
     </main>
   );
 }
 
-export default Exam;
+export default ProtectedRoute({ RenderProp: Controller });

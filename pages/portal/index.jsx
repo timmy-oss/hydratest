@@ -4,6 +4,7 @@ import Header from "../../components/Header";
 import SideMenu from "../../components/SideMenu";
 import { LineChart, Line } from "recharts";
 import BackToDashboard from "../../components/BackToDashboard";
+import InvalidViewportSize from "../../components/InvalidViewportSize";
 
 function Exam(props) {
   const graphData = [
@@ -16,15 +17,13 @@ function Exam(props) {
   ];
 
   return (
-    <main className="min-h-screen">
+    <main className="flex min-h-screen flex-col items-center justify-center">
       <Head>
-        <title> EEE303 </title>
+        <title> Portal | {process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
       <Header />
 
-      <main className="md:hidden">
-        <p> Please use a larger screen to access this site. </p>
-      </main>
+      <InvalidViewportSize />
 
       <div className="bg-white md:block hidden min-h-screen  mt-4 px-4  w-full">
         <SideMenu />
@@ -49,7 +48,7 @@ function Exam(props) {
 
             <div
               style={{ fontFamily: "" }}
-              className="grid  lg:grid-cols-3 xl:grid-cols-4 gap-y-4  w-full gap-x-4 "
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4  w-full gap-x-4 "
             >
               <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                 <p className="text-lg  text-left text-white/80">Total users</p>
