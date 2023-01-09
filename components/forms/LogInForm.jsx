@@ -52,9 +52,13 @@ export default function LogInForm() {
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const { store, dispatch } = useContext(context);
+  const { dispatch } = useContext(context);
 
-  const { e: redirectError = "", n: redirectTo = "" } = router.query;
+  const {
+    e: redirectError = "",
+    n: redirectTo = "",
+    nu: newUser = "",
+  } = router.query;
 
   async function handleSubmit(values) {
     const body = {
@@ -149,18 +153,22 @@ export default function LogInForm() {
               <FormLoader active={fetching} />
               {redirectError && (
                 <p className="text-sm bg-red-100 px-3 mb-2 rounded-xl inline-block text-red-500 py-1  text-left">
-                  {errorCodes[redirectError]}{" "}
+                  {errorCodes.authError[redirectError]}
                 </p>
               )}
 
               <h2 className="text-3xl font-bold  text-left text-black/80">
-                {redirectError === "001" ? "Log in to continue" : "Log in"}
+                {redirectError
+                  ? errorCodes.authErrorTexts[redirectError].h
+                  : newUser
+                  ? "Log In"
+                  : "Welcome back"}
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                {redirectError === "001"
-                  ? "You will be taken to where you stopped"
-                  : "Log in with your credentials to take your test."}
+                {redirectError
+                  ? errorCodes.authErrorTexts[redirectError].b
+                  : "Log in to access your courses and exams."}
               </legend>
 
               <div>

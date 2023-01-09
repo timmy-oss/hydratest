@@ -7,7 +7,7 @@ import FormLoader from "./FormLoader";
 import { RpcRequest } from "../../lib/rpc";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import CopyToClipboard from "react-copy-to-clipboard"
+import CopyToClipboard from "react-copy-to-clipboard";
 
 export function NotifyCard({
   id = "U000000",
@@ -22,6 +22,12 @@ export function NotifyCard({
   const router = useRouter();
   const [copied, setCopied] = useState(false);
 
+  const { n = "", sm = "" } = router.query;
+
+  if (n) {
+    successText = "Proceed";
+  }
+
   function handleBtn(e) {
     if (error) {
       closeOnError();
@@ -29,7 +35,11 @@ export function NotifyCard({
       if (successCallback) {
         successCallback();
       } else {
-        router.replace(`/?uid=${id}`);
+        if (n) {
+          router.replace(`/?uid=${id}&nu=true&n=${n}`);
+        } else {
+          router.replace(`/?uid=${id}&nu=true`);
+        }
       }
     }
   }
@@ -60,31 +70,32 @@ export function NotifyCard({
           <p className="text-black/60 text-base p-4 text-center font-bold">
             {sMsg || (
               <>
-                Your account has been created. Your ID is{" "}
+                {sm === "0"
+                  ? "User added successfully. User ID is "
+                  : "Your account has been created. Your ID is "}
                 <span className="px-3 py-1 text-sm bg-black/5 text-black/60 rounded-lg">
-                    {id}
-                    <CopyToClipboard text={id} onCopy={() => {
+                  {id}
+                  <CopyToClipboard
+                    text={id}
+                    onCopy={() => {
                       setCopied(true);
                       let t;
                       t = setTimeout(() => {
                         setCopied(false);
 
-                        clearTimeout(t)
-                      }, 5000)
-                    }}>
-                      {
-                        copied ?
-                          <i className="bi-check2 cursor-pointer ml-1 text-black/60 inline-block"></i>
-
-                          :
-
-
-                          <i className="bi-clipboard cursor-pointer ml-1 text-black/60 inline-block"></i>
-                      }
-
-                    </CopyToClipboard>
-
-
+                        clearTimeout(t);
+                      }, 3000);
+                    }}
+                  >
+                    {copied ? (
+                      <i className="bi-check2 cursor-pointer ml-1 text-black/60 inline-block"></i>
+                    ) : (
+                      <i
+                        title="Copy ID"
+                        className="bi-clipboard  cursor-pointer ml-1 text-black/60 inline-block"
+                      ></i>
+                    )}
+                  </CopyToClipboard>
                 </span>
               </>
             )}
@@ -132,10 +143,13 @@ const yupSchema = Yup.object().shape({
   }),
 });
 
-export default function LogInForm() {
+export default function SignUpForm(props) {
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const router = useRouter();
+
+  const { sm: signUpMode = "" } = router.query;
 
   async function handleSubmit(values) {
     const body = {
@@ -156,6 +170,7 @@ export default function LogInForm() {
     } else {
       // alert(res.error.message);
       console.log(res.error);
+      `2`;
       setError(res.error.message);
     }
 
@@ -213,12 +228,13 @@ export default function LogInForm() {
               <FormLoader active={fetching} />
 
               <h2 className="text-3xl font-bold  text-left text-black/80">
-                {" "}
-                Register
+                {signUpMode === "0" ? "Add a new user" : "Register"}
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                Sign up for the ultimate test now.
+                {signUpMode === "0"
+                  ? "Fill in the form below."
+                  : "Sign up for the ultimate test now."}
               </legend>
 
               <div>
@@ -343,18 +359,20 @@ export default function LogInForm() {
                 <ErrorMessage name="agree" />
               </p>
 
-              <div className="my-2 flex flex-row justify-end">
-                <Link href="/sign-in">
-                  <p className="text-sm inline-block text-sky-700/60 underline">
-                    Log in to an existing account
-                  </p>
-                </Link>
-              </div>
+              {signUpMode !== "0" && (
+                <div className="my-2 flex flex-row justify-end">
+                  <Link href="/sign-in">
+                    <p className="text-sm inline-block text-sky-700/60 underline">
+                      Log in to an existing account
+                    </p>
+                  </Link>
+                </div>
+              )}
 
               <div className="mt-8">
                 <input
                   type="submit"
-                  value="Sign Up"
+                  value={signUpMode === "0" ? "Add User" : "Sign Up"}
                   disabled={!isValid || isSubmitting || fetching}
                   className={
                     " capitalize bg-[#AE90E9]  transition-colors duration-500 text-white py-3 w-full block my-4 rounded-md " +

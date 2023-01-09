@@ -1,7 +1,8 @@
 import { useReducer, useState, createContext, useEffect } from "react";
 import authReducer from "./reducers/authReducer";
 import { useRouter } from "next/router";
-import RouterLoader from "../components/RouterLoader"
+import RouterLoader from "../components/RouterLoader";
+import { removeSession } from "../lib/session";
 
 const initialState = {
   auth: {
@@ -9,6 +10,8 @@ const initialState = {
     authExpCounter: 0,
   },
 };
+
+const LOGIN_URL = "/";
 
 function rootReducer(state, action) {
   return {
@@ -22,47 +25,39 @@ function Provisioner(props) {
   const [store, dispatch] = useReducer(rootReducer, initialState);
   const router = useRouter();
   const [n, setN] = useState(false);
-  const [showRouterLoader, setShowRouterLoader] = useState(false)
+  const [showRouterLoader, setShowRouterLoader] = useState(false);
 
+  // Log out function
+  function logOut() {
+    if (store.auth && store.auth.token && store.auth.user) {
+      removeSession();
+      dispatch({ type: "CLEAR_AUTH" });
 
+      router.push(`${LOGIN_URL}?e=002&&n=${router.pathname}`);
+    }
+  }
 
-  // Handle Route change start 
+  // Handle Route change start
   function routeStart(url) {
-
     setShowRouterLoader(true);
-
   }
 
   // Handle Route change end
   function routeEnd(url) {
     setShowRouterLoader(false);
-
   }
 
-
-  // Router events 
+  // Router events
 
   useEffect(() => {
-
     router.events.on("routeChangeStart", routeStart);
     router.events.on("routeChangeComplete", routeEnd);
 
-
     return () => {
-
-
       router.events.off("routeChangeStart", routeStart);
       router.events.off("routeChangeComplete", routeEnd);
-
-
-    }
-
-
-  }, [])
-
-
-
-
+    };
+  }, []);
 
   // Authentication Expiry Checker
   useEffect(() => {
@@ -94,8 +89,7 @@ function Provisioner(props) {
   }, [n, store.auth, router.isReady]);
 
   return (
-    <context.Provider value={{ store, dispatch }}>
-
+    <context.Provider value={{ store, dispatch, logOut }}>
       <RouterLoader active={showRouterLoader} />
 
       {props.children}

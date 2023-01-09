@@ -1,8 +1,9 @@
-import React from "react";
+import { context } from "../store/Provisioner";
 import Image from "next/image";
 import Link from "next/link";
 import cn from "classnames";
 import { useRouter } from "next/router";
+import { useContext } from "react";
 
 const menuList = [
   {
@@ -41,6 +42,7 @@ const menuList = [
 function SideMenu(props) {
   const router = useRouter();
   const path = router.pathname;
+  const { logOut } = useContext(context);
 
   return (
     <div className="order-1 w-[20%] bg-white z-10 mx-2 mb-2 fixed top-0 left-0 bottom-0 select-none  xl:block min-h-[650px] self-start mt-20 shadow-xl px-4 rounded-lg  border ">
@@ -82,7 +84,10 @@ function SideMenu(props) {
       </ul>
 
       <div className="w-full mt-12">
-        <button className="rounded-lg transition-colors duration-300 hover:bg-red-100 block w-full p-1 text-red-500 border border-red-500 bg-white text-sm ">
+        <button
+          onClick={logOut}
+          className="rounded-lg transition-colors duration-300 hover:bg-red-100 block w-full p-1 text-red-500 border border-red-500 bg-white text-sm "
+        >
           <i className="bi-power text-base"></i>&nbsp;&nbsp; Log Out
         </button>
       </div>

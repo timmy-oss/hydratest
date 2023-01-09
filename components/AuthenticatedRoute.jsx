@@ -5,6 +5,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import Loader from "./Loader";
 import { RpcRequest } from "../lib/rpc";
+import Header from "../components/Header";
 
 const LOGIN_URL = "/";
 
@@ -12,10 +13,11 @@ function AuthenticationPendingPage(props) {
   return (
     <div>
       <Head>
-        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
+        <title>Working... | {process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
 
       <main className="min-h-screen flex flex-col  justify-center items-center">
+        <Header />
         <Loader />
 
         {/* <p className="font-bold text-xl"> Authenticating...</p> */}
@@ -109,6 +111,8 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
   const router = useRouter();
   const [auth, setAuth] = useState(null);
 
+  const { n: redirectTo = "" } = router.query;
+
   async function authPipeline() {
     const loadedSession = loadSession();
 
@@ -126,7 +130,6 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
   }
 
   useEffect(() => {
-
     authPipeline();
   }, [store.auth.authExpCounter]);
 
@@ -136,7 +139,11 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
 
   if (authStage === "confirmed" && auth) {
     if (skipLogin) {
-      router.replace("/portal/courses");
+      if (redirectTo) {
+        router.replace(redirectTo);
+      } else {
+        router.replace("/portal");
+      }
     } else {
       return <RenderProp auth={auth} />;
     }

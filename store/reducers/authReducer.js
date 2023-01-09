@@ -8,6 +8,16 @@ export default function (state, action) {
 
       break;
 
+    case "CLEAR_AUTH":
+      return {
+        ...state,
+        token: null,
+        user: null,
+        flags: null,
+      };
+
+      break;
+
     case "AUTH_EXP_COUNTER":
       return {
         ...state,
