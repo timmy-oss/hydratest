@@ -101,7 +101,7 @@ function Course({ auth }) {
 
       <InvalidViewportSize />
 
-      <div className="bg-white  min-h-screen hidden md:block mt-4 px-4  w-full">
+      <div className="bg-white  min-h-screen hidden md:block  px-4  w-full">
         <SideMenu />
         <Header />
 
@@ -122,7 +122,7 @@ function Course({ auth }) {
 
         <div
           style={{ fontFamily: "Montserrat" }}
-          className=" p-6 mt-20 ml-[21%] w-[79%] overflow-auto self-start  order-2  border rounded-lg relative"
+          className=" p-6 mt-20 ml-[16%] w-[84%] overflow-auto self-start  order-2  border rounded-lg relative"
         >
           {error && (
             <NotifyCard

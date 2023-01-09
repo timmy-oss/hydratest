@@ -45,7 +45,7 @@ function SideMenu(props) {
   const { logOut } = useContext(context);
 
   return (
-    <div className="order-1 w-[20%] bg-white z-10 mx-2 mb-2 fixed top-0 left-0 bottom-0 select-none  xl:block min-h-[650px] self-start mt-20 shadow-xl px-4 rounded-lg  border ">
+    <div className="order-1 w-[15%] bg-white z-10 mx-2 mb-2 fixed top-0 left-0 bottom-0 select-none  xl:block min-h-[650px] self-start mt-20 shadow-xl px-4 rounded-lg  border ">
       <div className="   text-[#5823B7]/80 flex flex-row  justify-center mt-3">
         <Image
           priority
