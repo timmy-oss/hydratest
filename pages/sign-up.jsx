@@ -1,14 +1,21 @@
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import SignUpForm from "../components/forms/SignUpForm";
-import InvalidViewport from "../components/InvalidViewportSize"
+import InvalidViewport from "../components/InvalidViewportSize";
 
+const SignUpPage = () => {
+  const router = useRouter();
 
-const Home = () => {
+  const { sm = "" } = router.query;
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Head>
-        <title> Sign Up | {process.env.NEXT_PUBLIC_APP_NAME}</title>
+        <title>
+          {router.isReady ? (sm === "0" ? "Add User" : "Sign Up") : "..."} |{" "}
+          {process.env.NEXT_PUBLIC_APP_NAME}
+        </title>
       </Head>
 
       <InvalidViewport />
@@ -37,4 +44,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SignUpPage;
