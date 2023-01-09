@@ -2,15 +2,18 @@ import React from "react";
 
 function QuestionWindow() {
   return (
-    <div className="min-h-[150px]  mt-2 rounded-lg pt-6 shadow-2xl border border-gray-100/80">
-      <p className="text-black/60 font-bold px-6 text-xl">
+    <div
+      style={{ fontFamily: "Mulish" }}
+      className="min-h-[150px]  mt-2 rounded-lg pt-6 shadow-xl border border-gray-100/80"
+    >
+      <p className="text-black/60 font-normal px-6 text-xl">
         {" "}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
         deleniti quis inventore sed ipsa. Maiores molestiae nostrum nisi beatae
         saepe animi unde exercitationem. Assumenda deserunt voluptates iusto.
         Voluptatem, possimus! Nobis.
       </p>
-      <div className="space-y-2 mt-6 text-black/60  text-base font-bold px-6">
+      <div className="space-y-2 mt-6 text-black/60  text-base  px-6">
         <div className="">
           <input name="choice" id="optionA" type="radio" className="" /> &nbsp;
           <label htmlFor="optionA">
@@ -66,15 +69,17 @@ function QuestionWindow() {
           </button>
         </div>
 
-
         <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
           <span
             className={
               " capitalize xl:hidden bg-green-500 px-2 rounded-lg  rounded-l-md transition-colors duration-300 text-white py-2  block   "
             }
-
           >
-            <i className="bi-arrow-sync"></i>&nbsp; Attempted &nbsp; <span className="bg-white  text-sm text-green-500 px-2 py-1 rounded-full"> 0 </span>
+            <i className="bi-arrow-sync"></i>&nbsp; Attempted &nbsp;{" "}
+            <span className="bg-white  text-sm text-green-500 px-2 py-1 rounded-full">
+              {" "}
+              0{" "}
+            </span>
           </span>
           <button
             className={
@@ -93,7 +98,6 @@ function QuestionWindow() {
             <i className="bi-check2-circle"></i>&nbsp; Submit
           </button>
         </div>
-
       </div>
     </div>
   );

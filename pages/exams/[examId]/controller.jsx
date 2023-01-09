@@ -75,10 +75,10 @@ function Controller({ auth }) {
           <BackToDashboard to="portal" />
           <hr className="mb-4" />
 
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between sticky z-10 top-2 bg-white left-0 right-0 w-full">
             <h2
               style={{ fontFamily: "Mulish" }}
-              className="text-3xl mt-4 capitalize font-bold text-[#241142] text-left"
+              className="text-2xl mt-4 capitalize font-bold text-[#241142] text-left"
             >
               {exam.course.course_title}
             </h2>
