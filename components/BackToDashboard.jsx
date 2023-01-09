@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-function BackToDashboard({ to = "dashboard", url = "/portal" }) {
+function BackToDashboard({ to = "portal", url = "/portal" }) {
   return (
     <Link href={url}>
       <div>

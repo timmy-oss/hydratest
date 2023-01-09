@@ -9,16 +9,15 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 import Loader from "../../../components/Loader2";
 import { useRouter } from "next/router";
 import { RpcRequest } from "../../../lib/rpc";
-import Link from "next/link"
+import Link from "next/link";
 import InvalidViewportSize from "../../../components/InvalidViewportSize";
+import BackToDashboard from "../../../components/BackToDashboard";
 
 function Controller({ auth }) {
-
-  const router = useRouter()
+  const router = useRouter();
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState(false)
-
+  const [error, setError] = useState(false);
 
   async function getExam() {
     setFetching(true);
@@ -29,7 +28,7 @@ function Controller({ auth }) {
           token: auth.token,
         },
         body: {
-          id: router.query.examId
+          id: router.query.examId,
         },
       },
     };
@@ -46,48 +45,36 @@ function Controller({ auth }) {
     setFetching(false);
   }
 
-
   useEffect(() => {
-
     if (!router.isReady) return;
 
-
     getExam();
+  }, [router.isReady]);
 
-  }, [router.isReady])
-
-
-
-  if (fetching || !exam && !error) return <Loader />
+  if (fetching || (!exam && !error)) return <Loader />;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <Head>
-        <title> {exam ? exam.exam_title : router.isReady && router.query.examId} </title>
+        <title>
+          {" "}
+          {exam ? exam.exam_title : router.isReady && router.query.examId}{" "}
+        </title>
       </Head>
       <Header />
 
-
       <InvalidViewportSize />
 
-      <div className="bg-white min-h-screen hidden  md:flex flex-row  justify-around items-center mt-4">
+      <div className="bg-white min-h-screen hidden space-x-4 px-2 md:flex flex-row  justify-around items-center ">
         <SidePanel {...exam} />
 
         <div
           style={{ fontFamily: "Montserrat" }}
-          className=" px-6 mt-20 self-start  order-1"
+          className=" px-6 mt-20 self-stretch w-[83%]  order-1 border-t border-l rounded-lg py-6"
         >
+          <BackToDashboard to="portal" />
+          <hr className="mb-4" />
 
-          <Link href="/portal">
-          <p
-            style={{ fontFamily: "Roboto" }}
-            className="text-xs text-[#5522A9] hover:cursor-pointer font-bold"
-          >
-
-            <i className="bi-arrow-left text-xs text-[#5522A9]"> </i> &nbsp;
-              Back to portal
-            </p>
-          </Link>
           <div className="flex flex-row justify-between">
             <h2
               style={{ fontFamily: "Mulish" }}
