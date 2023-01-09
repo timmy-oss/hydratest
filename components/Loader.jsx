@@ -2,7 +2,7 @@ import Image from "next/image";
 
 function Loader() {
   return (
-    <div className="fixed z-10 text-center  bg-white  cursor-not-allowed flex flex-col justify-center items-center  top-0 bottom-0 right-0 left-0 ">
+    <div className="fixed z-[1] text-center  bg-white  cursor-not-allowed flex flex-col justify-center items-center  top-0 bottom-0 right-0 left-0 ">
       <div role="status ">
         <p className="w-[35px] h-[35px] inline-block border-8   border-y-[#5522A9] rounded-full animate-spin  text-center "></p>
 

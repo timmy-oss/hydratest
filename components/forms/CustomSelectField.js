@@ -17,7 +17,7 @@ export default function CustomSelect({
     nameKey: "course_title",
     valueKey: "id",
     data: null,
-  }
+  },
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(defaultValue);
@@ -33,9 +33,12 @@ export default function CustomSelect({
   }
 
   function setI(v) {
-
-    if (selected[params.nameKey] === v[params.nameKey] && selected[params.valueKey] === v[params.valueKey]) {
-      return
+    if (
+      selected &&
+      selected[params.nameKey] === v[params.nameKey] &&
+      selected[params.valueKey] === v[params.valueKey]
+    ) {
+      return;
     }
 
     // console.log("triggered")
@@ -48,7 +51,7 @@ export default function CustomSelect({
 
     if (params.data) {
       setData(params.data);
-      return
+      return;
     }
 
     const body = {
@@ -120,7 +123,7 @@ export default function CustomSelect({
               </div>
             )}
 
-            {!fetching && data ? (
+            {data ? (
               data.map((c, i) => {
                 return (
                   <div

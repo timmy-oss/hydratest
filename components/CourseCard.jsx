@@ -1,4 +1,4 @@
-import Link from "next/link"
+import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -6,23 +6,20 @@ function DropDown(props) {
   return (
     <div className="absolute top-0 z-20 shadow-xl border border-black/20 rounded-lg right-0 bg-white/40 min-h-[100px] min-w-[120px] px-2 py-4">
       <ul className="text-center text-base space-y-2  ">
-
-
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
-          Archive
-        </li>
-
+        <Link href={`/portal/courses/${props.id}`}>
+          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
+            View
+          </li>
+        </Link>
 
         <Link href={`/portal/courses/${props.id}?action=contribute`}>
-
           <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
             Contribute
-        </li>
-
+          </li>
         </Link>
 
         <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
-          Remove
+          Delete
         </li>
       </ul>
     </div>
@@ -93,15 +90,12 @@ function CourseCard(props) {
           alt="Course"
           className="rounded-lg object-cover"
         />
-        {
-          !showDropDown
-
-          &&
-        <i
-              onClick={(e) => setDropDown(true)}
-              className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/50 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
-        ></i>
-        }
+        {!showDropDown && (
+          <i
+            onClick={(e) => setDropDown(true)}
+            className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/50 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
+          ></i>
+        )}
 
         {showDropDown && <DropDown {...props} />}
       </div>
