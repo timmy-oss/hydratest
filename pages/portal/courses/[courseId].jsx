@@ -10,12 +10,16 @@ import ProtectedRoute from "../../../components/ProtectedRoute";
 import { RpcRequest } from "../../../lib/rpc";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import { useRouter } from "next/router";
-import Loader from "../../../components/Loader";
+import Loader from "../../../components/Loader2";
 import InvalidViewportSize from "../../../components/InvalidViewportSize";
+import CourseQuestionCard, {
+  CourseQuestionCardPlaceholder,
+} from "../../../components/CourseQuestionCard";
 
 function Course({ auth }) {
   const [showForm, setShowForm] = useState(false);
   const [fetching, setFetching] = useState(false);
+  const [fetching2, setFetching2] = useState(false);
   const [course, setCourse] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [error, setError] = useState(null);
@@ -23,7 +27,7 @@ function Course({ auth }) {
   const router = useRouter();
 
   async function getCourseQuestions() {
-    setFetching(true);
+    setFetching2(true);
 
     const body = {
       req: {
@@ -36,7 +40,7 @@ function Course({ auth }) {
       },
     };
 
-    const res = await RpcRequest("courses.get_questions", body);
+    const res = await RpcRequest("courses.get_course_questions", body);
 
     if (res.success) {
       setQuestions(res.data);
@@ -45,7 +49,7 @@ function Course({ auth }) {
       console.log(res.error);
     }
 
-    setFetching(false);
+    setFetching2(false);
   }
 
   async function getCourse() {
@@ -82,6 +86,7 @@ function Course({ auth }) {
     if (!router.isReady) return;
 
     getCourse();
+    getCourseQuestions();
   }, [router.isReady]);
 
   if (fetching || (!course && !error)) return <Loader />;
@@ -127,9 +132,9 @@ function Course({ auth }) {
           {error && (
             <NotifyCard
               closeOnError={() => setError(null)}
-              id={data && data.length}
+              id={questions && questions.length}
               error={error}
-              eMsg="Unable to load courses"
+              eMsg="Unable to load questions"
               errorText="Retry"
             />
           )}
@@ -161,19 +166,19 @@ function Course({ auth }) {
 
           {/* Course Details  */}
 
-          <div className="flex flex-col justify-center items-center space-y-6 mt-8">
-            {[1, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2].map((q, i) => (
-              <div
-                key={i}
-                className="min-h-[200px] p-4 bg-gray-200 rounded-lg w-full"
-              >
-                <p className="inline-block text-sm bg-gray-300 text-white py-1 px-2 rounded-lg">
-                  {" "}
-                  ID: {course.id}{" "}
-                </p>
-              </div>
-            ))}
-          </div>
+          {questions && !fetching2 ? (
+            <div className="grid grid-cols-2 gap-4 mt-8">
+              {questions.map((q, i) => (
+                <CourseQuestionCard key={i} {...q} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 mt-8">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((p, i) => (
+                <CourseQuestionCardPlaceholder key={i} active={fetching2} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </main>

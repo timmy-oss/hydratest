@@ -20,7 +20,7 @@ function AuthenticationPendingPage(props) {
         <Header />
         <Loader />
 
-        {/* <p className="font-bold text-xl"> Authenticating...</p> */}
+        <p className="text-black/40 text-sm text-center"> Working...</p>
       </main>
     </div>
   );
