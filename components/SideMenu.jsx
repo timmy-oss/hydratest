@@ -75,7 +75,7 @@ function SideMenu(props) {
             >
               {" "}
               <i
-                className={a.icon + " text-xl hidden lg:inline-block"}
+                className={a.icon + " text-xl hidden xl:inline-block"}
               ></i>{" "}
               &nbsp;&nbsp;{a.title}
             </li>

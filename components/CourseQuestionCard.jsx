@@ -1,6 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
+import cn from "classnames";
 import { useState, useEffect } from "react";
+import { RpcRequest } from "../lib/rpc";
 
 function DropDown(props) {
   return (
@@ -70,6 +71,83 @@ export function CourseQuestionCardPlaceholder({ active }) {
 
 function CourseQuestionCard(props) {
   const [showDropDown, setDropDown] = useState(false);
+  const [meta, setMeta] = useState({});
+  const [fetching, setFetching] = useState({});
+  const [error, setError] = useState(null);
+
+  //  Request functions
+
+  async function fetchQuestionMeta() {
+    const body = {
+      req: {
+        auth: {
+          token: props.token,
+        },
+        body: {
+          id: props.id,
+        },
+      },
+    };
+
+    const res = await RpcRequest(`courses.questions.get_meta`, body);
+
+    if (res.success) {
+      setMeta(res.data);
+      // console.log(res.data);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+  }
+
+  async function questionRequest(type = "upvote") {
+    if (fetching["upvote"] || fetching["downvote"] || fetching["flag"]) return;
+
+    setFetching({ ...fetching, [type]: true });
+
+    const body = {
+      req: {
+        auth: {
+          token: props.token,
+        },
+        body: {
+          id: props.id,
+        },
+      },
+    };
+
+    const res = await RpcRequest(`courses.questions.${type}`, body);
+
+    if (res.success) {
+      setMeta({ ...meta, [type]: res.data });
+      // console.log(res.data);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+
+    setFetching({ ...fetching, [type]: false });
+  }
+
+  async function toggleUpvote() {
+    await questionRequest("upvote");
+  }
+
+  async function toggleDownvote() {
+    await questionRequest("downvote");
+  }
+
+  async function toggleFlag() {
+    await questionRequest("flag");
+  }
+
+  function handleEditClick(e) {
+    props.editQuestion(props.id);
+  }
+
+  useEffect(() => {
+    fetchQuestionMeta();
+  }, []);
 
   useEffect(() => {
     if (!showDropDown) return;
@@ -133,27 +211,77 @@ function CourseQuestionCard(props) {
           </p>
         )}
 
-        <div className="block uppercase pt-2 text-base text-black space-x-2  px-2 rounded-lg">
-          <i
-            role="button"
-            className="bi-arrow-bar-up hover:bg-gray-300 px-2 py-1 rounded-lg"
-          ></i>
-          <i
-            role="button"
-            className="bi-arrow-bar-down  hover:bg-gray-300 px-2 py-1 rounded-lg"
-          ></i>
+        <div className=" flex flex-rowjustify-around items-center uppercase pt-2 text-base text-black space-x-2  px-2 rounded-lg">
+          <div>
+            <i
+              role="button"
+              title="Upvote"
+              onClick={toggleUpvote}
+              className={
+                "bi-arrow-bar-up hover:bg-gray-300 px-2 py-1 rounded-lg " +
+                cn({
+                  " text-green-500 ": meta.upvote && meta.upvote.upvoted,
+                  " text-black ": !(meta.upvote && meta.upvote.upvoted),
+                  " opacity-40 bg-gray-300 ": fetching.upvote,
+                })
+              }
+            ></i>
+            <span className="text-xs align-middle inline-block text-black">
+              {" "}
+              {meta.upvote && meta.upvote.upvotes}
+            </span>
+          </div>
 
+          <div>
+            <i
+              role="button"
+              title="Downvote"
+              onClick={toggleDownvote}
+              className={
+                "bi-arrow-bar-down  hover:bg-gray-300 px-2 py-1 rounded-lg " +
+                cn({
+                  " text-red-500 ": meta.downvote && meta.downvote.downvoted,
+                  " text-black ": !(meta.downvote && meta.downvote.downvoted),
+                  " opacity-40 bg-gray-300 ": fetching.downvote,
+                })
+              }
+            ></i>
+            <span className="text-xs align-middle inline-block text-black">
+              {" "}
+              {meta.downvote && meta.downvote.downvotes}
+            </span>
+          </div>
+
+          <div>
+            <i
+              title="Flag as inappropriate"
+              role="button"
+              onClick={toggleFlag}
+              className={
+                "  hover:bg-gray-300 px-2 py-1 rounded-lg " +
+                cn({
+                  " text-red-500 bi-flag-fill ": meta.flag && meta.flag.flagged,
+                  " text-black bi-flag ": !(meta.flag && meta.flag.flagged),
+                  " opacity-40 bg-gray-300 ": fetching.flag,
+                })
+              }
+            ></i>
+
+            <span className="text-xs align-middle hidden  text-black">
+              {" "}
+              {meta.flag && meta.flag.flags}
+            </span>
+          </div>
           <i
+            title="Edit"
             role="button"
-            className="bi-flag  hover:bg-gray-300 px-2 py-1 rounded-lg"
-          ></i>
-          <i
-            role="button"
+            onClick={handleEditClick}
             className="bi-pencil-square  hover:bg-gray-300 px-2 py-1 rounded-lg"
           ></i>
           <i
+            title="Delete"
             role="button"
-            className="bi-trash  hover:bg-gray-300 px-2 py-1 rounded-lg"
+            className="bi-trash cursor-not-allowed opacity-20 bg-gray-300 hover:bg-gray-300 px-2 py-1 rounded-lg"
           ></i>
         </div>
       </div>

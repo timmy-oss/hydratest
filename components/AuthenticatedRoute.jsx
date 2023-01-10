@@ -113,6 +113,10 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
 
   const { n: redirectTo = "" } = router.query;
 
+  useEffect(() => {
+    setAuth(auth);
+  }, [router.isReady]);
+
   async function authPipeline() {
     const loadedSession = loadSession();
 

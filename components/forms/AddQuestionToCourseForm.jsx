@@ -126,15 +126,51 @@ const germaneQuestionSchemaExtension = {
     .label("Answer"),
 };
 
-export default function AddQuestionToCourseForm({ close, course }) {
-  const { store, dispatch } = useContext(context);
+export default function AddOrEditQuestionToCourseForm({
+  close,
+  course,
+  editParams,
+}) {
+  const { store } = useContext(context);
   const [readerReady, setReaderReady] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [schemaCombination, setSchemaCombination] = useState(1);
+  const [schemaCombination, setSchemaCombination] = useState(0);
 
-  const yupSchema = Yup.object().shape(
+  let initialValues;
+
+  if (editParams.show) {
+    const q = editParams.question;
+    initialValues = {
+      questionType: q.question_type,
+      questionContent: q.question_content,
+      answer: q.answer || "",
+      optionA: q.option_A || "",
+      optionB: q.option_B || "",
+      optionC: q.option_C || "",
+      optionD: q.option_D || "",
+      correctOption: q.correct_option || "",
+      lockQuestion: q.lock_question,
+      illustrationUrl: q.illustration || "",
+      illustration: "",
+    };
+  } else {
+    initialValues = {
+      questionType: "objective",
+      questionContent: "",
+      answer: "",
+      optionA: "",
+      optionB: "",
+      optionC: "",
+      optionD: "",
+      correctOption: "a",
+      lockQuestion: false,
+      illustration: "",
+    };
+  }
+
+  let yupSchema = Yup.object().shape(
     schemaCombination === 0
       ? baseSchema
       : schemaCombination === 1
@@ -143,6 +179,18 @@ export default function AddQuestionToCourseForm({ close, course }) {
       ? { ...baseSchema, ...germaneQuestionSchemaExtension }
       : baseSchema
   );
+
+  if (initialValues.questionType === "germane" && schemaCombination === 0) {
+    yupSchema = Yup.object().shape({
+      ...baseSchema,
+      ...germaneQuestionSchemaExtension,
+    });
+  } else if (schemaCombination === 0) {
+    yupSchema = Yup.object().shape({
+      ...baseSchema,
+      ...objQuestionSchemaExtension,
+    });
+  }
 
   async function handleSubmit(values) {
     // console.log(values);
@@ -170,6 +218,7 @@ export default function AddQuestionToCourseForm({ close, course }) {
         },
         body: {
           course: course.id,
+          questionId: editParams.show && editParams.question.id,
           questionType: values.questionType || null,
           questionContent: values.questionContent || null,
           answer: values.answer || null,
@@ -184,7 +233,12 @@ export default function AddQuestionToCourseForm({ close, course }) {
       },
     };
 
-    const res = await RpcRequest("courses.add_question", body);
+    let res;
+    if (editParams.show) {
+      res = await RpcRequest("courses.edit_question", body);
+    } else {
+      res = await RpcRequest("courses.add_question", body);
+    }
 
     if (res.success) {
       setData(res.data);
@@ -226,8 +280,16 @@ export default function AddQuestionToCourseForm({ close, course }) {
           closeOnError={() => setError(null)}
           id={data && data.id}
           error={error}
-          sMsg="Question added successfully"
-          eMsg="Unable to add question"
+          sMsg={
+            editParams.show
+              ? "Question updated successfully"
+              : "Question added successfully"
+          }
+          eMsg={
+            editParams.show
+              ? "Unable to update question"
+              : "Unable to add question"
+          }
           successText="Close"
           successCallback={() => {
             setData(null);
@@ -237,22 +299,12 @@ export default function AddQuestionToCourseForm({ close, course }) {
       )}
 
       <Formik
-        initialValues={{
-          questionType: "objective",
-          questionContent: "",
-          answer: "",
-          optionA: "",
-          optionB: "",
-          optionC: "",
-          optionD: "",
-          correctOption: "a",
-          lockQuestion: false,
-          illustration: "",
-        }}
+        initialValues={initialValues}
         onSubmit={handleSubmit}
         validationSchema={yupSchema}
       >
         {({ errors, isValid, isSubmitting, values, setFieldValue }) => {
+          // console.log(errors);
           return (
             <Form className="bg-gray-30   p-4 w-[80%] mx-auto ">
               {/* Logo Header  starts  */}
@@ -276,12 +328,13 @@ export default function AddQuestionToCourseForm({ close, course }) {
               <FormLoader active={fetching} />
 
               <h2 className="text-xl font-bold  text-left text-black/80">
-                {" "}
-                Add a new question
+                {editParams.show ? "Update question" : "Add a new question"}
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                Fill in the details of the new question.
+                {editParams.show
+                  ? "Edit the details of the question below."
+                  : "Fill in the details of the new question."}
               </legend>
 
               <div>
@@ -428,7 +481,7 @@ export default function AddQuestionToCourseForm({ close, course }) {
               )}
 
               <div>
-                {readerReady && (
+                {(readerReady || values.illustrationUrl) && (
                   <div className="relative">
                     <label
                       className="text-xs select-none  text-black/60 font-bold"
@@ -441,7 +494,10 @@ export default function AddQuestionToCourseForm({ close, course }) {
                       height="300"
                       width="300"
                       className="my-4"
-                      src={values.reader && values.reader.result}
+                      src={
+                        (values.reader && values.reader.result) ||
+                        values.illustrationUrl
+                      }
                     />
 
                     <p className="block py-2 text-center text-sm font-normal text-red-500">
@@ -451,6 +507,10 @@ export default function AddQuestionToCourseForm({ close, course }) {
                     <button
                       onClick={(e) => {
                         e.preventDefault();
+                        if (values.illustrationUrl) {
+                          setFieldValue("illustrationUrl", "");
+                          return;
+                        }
                         handleFile(
                           {
                             target: {
@@ -468,7 +528,7 @@ export default function AddQuestionToCourseForm({ close, course }) {
                   </div>
                 )}
 
-                {!readerReady && (
+                {!readerReady && !values.illustrationUrl && (
                   <>
                     <label
                       className="text-xs select-none  text-black/60 font-bold"
@@ -522,7 +582,7 @@ export default function AddQuestionToCourseForm({ close, course }) {
               <div className="mt-8">
                 <input
                   type="submit"
-                  value="Create"
+                  value={editParams.show ? "Update" : "Create"}
                   disabled={!isValid || isSubmitting || fetching}
                   className={
                     " capitalize bg-[#AE90E9]  transition-colors duration-500 text-white py-3 w-full block my-4 rounded-md " +

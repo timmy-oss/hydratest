@@ -23,8 +23,23 @@ function Course({ auth }) {
   const [course, setCourse] = useState(null);
   const [questions, setQuestions] = useState(null);
   const [error, setError] = useState(null);
-
+  const [questionEdit, setQuestionEdit] = useState({
+    show: false,
+    question: null,
+  });
   const router = useRouter();
+
+  function handleEditQuestion(questionId) {
+    const q = questions.find((q) => q.id === questionId);
+    if (!q) return;
+
+    setQuestionEdit({ show: true, question: q });
+  }
+
+  function closeForm(e) {
+    setShowForm(false);
+    setQuestionEdit({ ...questionEdit, show: false });
+  }
 
   async function getCourseQuestions() {
     setFetching2(true);
@@ -86,8 +101,13 @@ function Course({ auth }) {
     if (!router.isReady) return;
 
     getCourse();
-    getCourseQuestions();
   }, [router.isReady]);
+
+  useEffect(() => {
+    if (!router.isReady) return;
+    if (showForm || questionEdit.show) return;
+    getCourseQuestions();
+  }, [router.isReady, error, showForm, questionEdit.show]);
 
   if (fetching || (!course && !error)) return <Loader />;
 
@@ -112,14 +132,15 @@ function Course({ auth }) {
 
         {/* Add New Question To Course Form  */}
 
-        {showForm && (
+        {(showForm || questionEdit.show) && (
           <>
             <div className="fixed top-0 right-0 left-0 bottom-0 bg-black/40 z-10"></div>
 
             <div className="fixed min-h-[600px] top-10 rounded-lg right-0 left-0  z-10 max-w-md mx-auto bg-white">
               <AddQuestionToCourseForm
+                editParams={questionEdit}
                 course={course}
-                close={(e) => setShowForm(false)}
+                close={closeForm}
               />
             </div>
           </>
@@ -167,13 +188,18 @@ function Course({ auth }) {
           {/* Course Details  */}
 
           {questions && !fetching2 ? (
-            <div className="grid grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
               {questions.map((q, i) => (
-                <CourseQuestionCard key={i} {...q} />
+                <CourseQuestionCard
+                  key={i}
+                  {...q}
+                  {...auth}
+                  editQuestion={handleEditQuestion}
+                />
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
               {[1, 2, 3, 4, 5, 6, 7, 8].map((p, i) => (
                 <CourseQuestionCardPlaceholder key={i} active={fetching2} />
               ))}

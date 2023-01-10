@@ -110,9 +110,7 @@ export default function LogInForm() {
           sMsg="Sign in successful"
           eMsg="Unable to sign in"
           successText="Proceed"
-          successCallback={() =>
-            router.replace(redirectTo || "/portal/courses")
-          }
+          successCallback={() => router.replace(redirectTo || "/portal")}
         />
       )}
 
