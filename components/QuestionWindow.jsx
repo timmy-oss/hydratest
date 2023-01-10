@@ -6,7 +6,7 @@ function QuestionWindow() {
       style={{ fontFamily: "Mulish" }}
       className="min-h-[150px]  mt-2 rounded-lg pt-6 shadow-xl border border-gray-100/80"
     >
-      <p className="text-black/60 font-normal px-6 text-xl">
+      <p className="text-black/80 font-normal px-6 text-xl">
         {" "}
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
         deleniti quis inventore sed ipsa. Maiores molestiae nostrum nisi beatae
@@ -14,7 +14,20 @@ function QuestionWindow() {
         Voluptatem, possimus! Nobis.
       </p>
       <div className="space-y-2 mt-6 text-black/60  text-base  px-6">
-        <div className="">
+        {["A", "B", "C", "D"].map((l, i) => (
+          <div
+            role="button"
+            key={i}
+            className="rounded-md  flex flex-row justify-between items-center w-full text-left bg-[#5522A9]/10"
+          >
+            <span className="inline-block w-[10%] py-2 rounded-l-md px-4 text-center h-full font-bold bg-[#5522A9]/20 ">
+              {" "}
+              {l}
+            </span>
+          </div>
+        ))}
+
+        {/* <div className="">
           <input name="choice" id="optionA" type="radio" className="" /> &nbsp;
           <label htmlFor="optionA">
             {" "}
@@ -44,7 +57,7 @@ function QuestionWindow() {
             {" "}
             <span className="font-bold"> D. </span> &nbsp; The house of God{" "}
           </label>
-        </div>
+        </div> */}
       </div>
       <hr className="mt-4" />
       <div className="  flex flex-row justify-between  ">
