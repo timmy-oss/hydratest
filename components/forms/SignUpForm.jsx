@@ -49,7 +49,13 @@ export function NotifyCard({
 
       <div
         style={{ fontFamily: "Mulish" }}
-        className="absolute top-[20%] z-10 right-0 left-0 w-[60%] max-w-xl mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2"
+        className={
+          "absolute top-[20%] z-10 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2 " +
+          cn({
+            " border border-red-500/40 ": error,
+            " border border-green-500/40 ": !error,
+          })
+        }
       >
         <div className="mx-auto mt-4 flex flex-col justify-center items-center">
           {error ? (

@@ -4,7 +4,7 @@ import cn from "classnames";
 function QuestionsMap(props) {
   const boxes = [];
 
-  for (let i = 0; i < props.number_of_questions + 100; ++i) {
+  for (let i = 0; i < props.number_of_questions; ++i) {
     boxes.push(i);
   }
 
@@ -18,7 +18,7 @@ function QuestionsMap(props) {
             " w-[50px]  mr-2 mb-2 text-center text-sm p-1 py-2 rounded-lg cursor-pointer" +
             cn({
               "  bg-[#5522A9] hover:bg-[#5522A9]/90 text-white ": false,
-              " bg-[#5522A9]/10 hover:bg-gray-200  text-[#5522A9] ": true,
+              " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ": true,
             })
           }
         >

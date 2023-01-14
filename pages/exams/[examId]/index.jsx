@@ -2,23 +2,20 @@ import Head from "next/head";
 import Header from "../../../components/Header";
 import Image from "next/image";
 import ProtectedRoute from "../../../components/ProtectedRoute";
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { RpcRequest } from "../../../lib/rpc";
 import Loader from "../../../components/Loader2";
 import InvalidViewportSize from "../../../components/InvalidViewportSize";
 
 function Intro({ auth }) {
-
   const router = useRouter();
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
-  const [error, setError] = useState(false)
-
+  const [error, setError] = useState(false);
 
   function begin() {
-
-    router.replace(`/exams/${exam.id}/controller?session=${"session_key"}`)
+    router.replace(`/exams/${exam.id}/session?key=${"session_key"}`);
   }
 
   async function getExam() {
@@ -30,7 +27,7 @@ function Intro({ auth }) {
           token: auth.token,
         },
         body: {
-          id: router.query.examId
+          id: router.query.examId,
         },
       },
     };
@@ -47,29 +44,23 @@ function Intro({ auth }) {
     setFetching(false);
   }
 
-
   useEffect(() => {
-
     if (!router.isReady) return;
 
-
     getExam();
+  }, [router.isReady]);
 
-  }, [router.isReady])
+  if (fetching || (!exam && !error)) return <Loader />;
 
-
-
-  if (fetching || !exam && !error) return <Loader />
-
-
-  if (error) return <p> {error} </p>
-
-
+  if (error) return <p> {error} </p>;
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center ">
       <Head>
-        <title> {exam ? exam.exam_title : router.isReady && router.query.examId} </title>
+        <title>
+          {" "}
+          {exam ? exam.exam_title : router.isReady && router.query.examId}{" "}
+        </title>
       </Head>
 
       <Header />
@@ -77,10 +68,6 @@ function Intro({ auth }) {
       <InvalidViewportSize />
 
       <div className=" hidden md:flex min-h-screen bg-no-repeat bg-fixed bg-center bg-clip-content bg-cover bg-[url('/assets/exam2.jpg')] flex-col bg-white justify-center items-center w-full">
-
-
-
-
         <div className=" mt-8  text-[#5823B7] flex flex-row  justify-start">
           <Image
             priority
@@ -136,7 +123,10 @@ function Intro({ auth }) {
           </div>
 
           <div className=" mt-4 mb-2 w-full">
-            <button onClick={begin} className="rounded-lg w-full block hover:bg-[#5522A9]/90 transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold">
+            <button
+              onClick={begin}
+              className="rounded-lg w-full block hover:bg-[#5522A9]/90 transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold"
+            >
               Begin
             </button>
           </div>
@@ -145,6 +135,5 @@ function Intro({ auth }) {
     </main>
   );
 }
-
 
 export default ProtectedRoute({ RenderProp: Intro });

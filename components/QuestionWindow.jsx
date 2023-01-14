@@ -1,64 +1,55 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import QuestionAnswerSelector from "./QuestionAnswerSelector";
+import { RpcRequest } from "../lib/rpc";
 
-function QuestionWindow() {
+function QuestionWindow({ session, auth, ...props }) {
+  const [q, setQ] = useState(null);
+  const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
+  const [activeQid, setQid] = useState(session.question_ids[0]);
+
+  async function fetchQ() {
+    setFetching(true);
+
+    const body = {
+      req: {
+        auth: {
+          token: auth.token,
+        },
+        body: {
+          id: activeQid,
+          sessionId: session.id,
+        },
+      },
+    };
+
+    const res = await RpcRequest("exams.session.get_question", body);
+
+    if (res.success) {
+      setQ(res.data.question);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+
+    setFetching(false);
+  }
+
+  useEffect(() => {
+    fetchQ();
+  }, [activeQid]);
+
   return (
     <div
       style={{ fontFamily: "Mulish" }}
       className="min-h-[150px]  mt-2 rounded-lg pt-6 shadow-xl border border-gray-100/80"
     >
       <p className="text-black/80 font-normal px-6 text-xl">
-        {" "}
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis
-        deleniti quis inventore sed ipsa. Maiores molestiae nostrum nisi beatae
-        saepe animi unde exercitationem. Assumenda deserunt voluptates iusto.
-        Voluptatem, possimus! Nobis.
+        {fetching || !q ? "Loading..." : q.question_content}
       </p>
-      <div className="space-y-2 mt-6 text-black/60  text-base  px-6">
-        {["A", "B", "C", "D"].map((l, i) => (
-          <div
-            role="button"
-            key={i}
-            className="rounded-md  flex flex-row justify-between items-center w-full text-left bg-[#5522A9]/10"
-          >
-            <span className="inline-block w-[10%] py-2 rounded-l-md px-4 text-center h-full font-bold bg-[#5522A9]/20 ">
-              {" "}
-              {l}
-            </span>
-          </div>
-        ))}
 
-        {/* <div className="">
-          <input name="choice" id="optionA" type="radio" className="" /> &nbsp;
-          <label htmlFor="optionA">
-            {" "}
-            <span className="font-bold"> A. </span> &nbsp; The love of man{" "}
-          </label>
-        </div>
+      {<QuestionAnswerSelector />}
 
-        <div>
-          <input name="choice" id="optionB" type="radio" className="" /> &nbsp;
-          <label htmlFor="optionB">
-            {" "}
-            <span className="font-bold"> B. </span> &nbsp; Church fellwoship{" "}
-          </label>
-        </div>
-
-        <div>
-          <input name="choice" id="optionC" type="radio" className="" /> &nbsp;
-          <label htmlFor="optionC">
-            {" "}
-            <span className="font-bold"> C. </span> &nbsp; H20 and hydrogen{" "}
-          </label>
-        </div>
-
-        <div>
-          <input name="choice" id="optionD" type="radio" className="" /> &nbsp;
-          <label htmlFor="optionD">
-            {" "}
-            <span className="font-bold"> D. </span> &nbsp; The house of God{" "}
-          </label>
-        </div> */}
-      </div>
       <hr className="mt-4" />
       <div className="  flex flex-row justify-between  ">
         <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
