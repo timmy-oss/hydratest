@@ -17,7 +17,13 @@ async function sendHeartbeat(auth, session) {
   return await RpcRequest("exams.session.heartbeat", body);
 }
 
-export default function Heartbeat({ session, auth, setStatus, debug = false }) {
+export default function Heartbeat({
+  session,
+  auth,
+  setStatus,
+  status,
+  debug = false,
+}) {
   const router = useRouter();
   const [lastPing, setLastPing] = useState(null);
   const [pingInterval, setPingInterval] = useState(session.ping_interval);
@@ -26,6 +32,38 @@ export default function Heartbeat({ session, auth, setStatus, debug = false }) {
   const [beats, setBeats] = useState(0);
 
   let tId;
+
+  async function heartbeatReq() {
+    if (status === "success") {
+      setStatus("sending");
+    }
+
+    const res = await sendHeartbeat(auth, session);
+    if (res.success) {
+      setLastPing(Date.now());
+      if (failedReqs > 0) {
+        setFailedReqs(0);
+      }
+
+      if (pingInterval !== session.ping_interval) {
+        setPingInterval(session.ping_interval);
+      }
+      setStatus("success");
+    } else {
+      setError(res.error.message);
+      setFailedReqs(failedReqs + 1);
+      if (failedReqs > 2) {
+        setPingInterval(session.ping_interval * (failedReqs - 1));
+
+        setStatus("error");
+      } else {
+        setStatus("warning");
+      }
+      console.log(res.error, "Ping Inteval: ", pingInterval, "s");
+    }
+
+    setBeats(beats + 1);
+  }
 
   async function heartbeatPipeline() {
     if (debug) {
@@ -41,34 +79,10 @@ export default function Heartbeat({ session, auth, setStatus, debug = false }) {
       );
     }
 
-    tId = setTimeout(async () => {
-      setStatus("sending");
-      const res = await sendHeartbeat(auth, session);
-      if (res.success) {
-        setLastPing(Date.now());
-        if (failedReqs > 0) {
-          setFailedReqs(0);
-        }
-
-        if (pingInterval !== session.ping_interval) {
-          setPingInterval(session.ping_interval);
-        }
-
-        setStatus("success");
-      } else {
-        setError(res.error.message);
-        setFailedReqs(failedReqs + 1);
-        if (failedReqs > 2) {
-          setPingInterval(session.ping_interval * (failedReqs - 1));
-          setStatus("error");
-        } else {
-          setStatus("warning");
-        }
-        console.log(res.error, "Ping Inteval: ", pingInterval, "s");
-      }
-
-      setBeats(beats + 1);
-    }, pingInterval * 1000);
+    if (beats === 0) {
+      await heartbeatReq();
+    }
+    tId = setTimeout(heartbeatReq, pingInterval * 1000);
   }
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import Head from "next/head";
 import Header from "../../../components/Header";
 import QuestionsMap from "../../../components/QuestionsMap";
@@ -15,7 +15,7 @@ import { createSession } from "../../../lib/securesession";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import Heartbeat from "../../../components/SessionHeartbeat";
 
-function SessionController({ auth }) {
+const SessionController = memo(function ({ auth }) {
   const router = useRouter();
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
@@ -23,6 +23,7 @@ function SessionController({ auth }) {
   const [initializing, setInitializing] = useState(true);
   const [session, setSession] = useState(null);
   const [status, setStatus] = useState("idle");
+  const [activeQ, setActiveQ] = useState(null);
 
   async function getExam() {
     setFetching(true);
@@ -65,17 +66,20 @@ function SessionController({ auth }) {
 
   useEffect(() => {
     if (!router.isReady) return;
-    if (session) return;
+
+    console.log("Ran initSession");
 
     initSession();
-  }, [router.isReady, session]);
+  }, [exam]);
 
   useEffect(() => {
     if (!router.isReady) return;
     if (exam) return;
 
+    console.log("Ran getExam");
+
     getExam();
-  }, [router.isReady, exam]);
+  }, [exam]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -105,9 +109,14 @@ function SessionController({ auth }) {
         session &&
         session.id && (
           <div className="bg-white min-h-screen hidden space-x-4 pr-2 md:flex flex-row  justify-around items-center ">
-            <Heartbeat session={session} auth={auth} setStatus={setStatus} />
+            <Heartbeat
+              session={session}
+              auth={auth}
+              setStatus={setStatus}
+              status={status}
+            />
 
-            <SidePanel {...exam} />
+            <SidePanel status={status} {...exam} />
 
             <div
               style={{ fontFamily: "Montserrat" }}
@@ -130,19 +139,28 @@ function SessionController({ auth }) {
                   targetTime={exam.time_allowed}
                 />
               </div>
-              <p className="text-sm pl-2 text-[#241142]  mt-4 hover:cursor-pointer font-bold">
-                Question 1
-              </p>
 
-              <QuestionWindow auth={auth} session={session} {...exam} />
+              <QuestionWindow
+                setActiveQ={setActiveQ}
+                status={status}
+                auth={auth}
+                session={session}
+                {...exam}
+              />
 
-              <QuestionsMap auth={auth} session={session} {...exam} />
+              <QuestionsMap
+                activeQ={activeQ}
+                status={status}
+                auth={auth}
+                session={session}
+                {...exam}
+              />
             </div>
           </div>
         )
       )}
     </main>
   );
-}
+});
 
 export default ProtectedRoute({ RenderProp: SessionController });

@@ -1,10 +1,17 @@
 import cn from "classnames";
 import { useState } from "react";
 
-export default function QuestionAnswerSelector(props) {
+const disallowedStates = ["warning", "error", "idle"];
+
+export default function QuestionAnswerSelector({ status, question, ...props }) {
   const [selected, setSelected] = useState(null);
 
+  const noInput = disallowedStates.includes(status);
+
   function selectAnswer(key) {
+    if (disallowedStates.includes(status)) {
+      return;
+    }
     setSelected(key);
   }
 
@@ -14,13 +21,17 @@ export default function QuestionAnswerSelector(props) {
         <div
           onClick={(e) => selectAnswer(l)}
           role="button"
-          title={"Click to select option " + l}
+          title={
+            noInput ? "Server unresponsive..." : "Click to select option " + l
+          }
           key={i}
           className={
-            "rounded-md w-[98%] flex flex-row justify-start space-x-8 items-center  text-left   hover:text-white transition-colors " +
+            "rounded-md w-[98%] flex flex-row justify-start space-x-8 items-center  text-left   transition-colors " +
             cn({
               " bg-[#5522A9]/90 text-white": l === selected,
-              " hover:bg-[#5522A9]/50 bg-[#5522A9]/10 ": l !== selected,
+              " hover:bg-[#5522A9]/50 bg-[#5522A9]/10 hover:text-white ":
+                l !== selected && !noInput,
+              " opacity-30 cursor-not-allowed ": noInput,
             })
           }
         >
@@ -33,9 +44,7 @@ export default function QuestionAnswerSelector(props) {
           </span>
 
           <span className="self-stretch py-2 px-4 text-left">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Assumenda
-            sequi itaque veritatis minus corporis nulla tempora ea dolores
-            commodi quos quasi hic.
+            {question["option_" + l]}
           </span>
         </div>
       ))}

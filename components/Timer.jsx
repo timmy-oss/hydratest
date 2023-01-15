@@ -56,7 +56,7 @@ export default function Timer({ targetTime = 61, status = "idle" }) {
             className={
               "  bi-circle-fill xl:hidden transition-colors duration-300  ml-4  rounded-full " +
               cn({
-                " text-green-400 ": status === "sending",
+                " text-[#5522A9] ": status === "sending",
                 " text-red-500 ": status === "error",
                 " text-green-500 ": status === "success",
                 " text-black/20 ": status === "idle",
@@ -73,7 +73,7 @@ export default function Timer({ targetTime = 61, status = "idle" }) {
           className={
             "   hidden xl:inline-block h-[55px] w-[20%] transition-colors duration-300    rounded-r-xl " +
             cn({
-              " bg-green-400 ": status === "sending",
+              " bg-[#5522A9] ": status === "sending",
               " bg-red-500 ": status === "error",
               " bg-green-500 ": status === "success",
               " bg-black/20 ": status === "idle",

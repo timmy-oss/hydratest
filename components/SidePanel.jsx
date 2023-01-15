@@ -1,6 +1,10 @@
 import React from "react";
 
-function SidePanel(props) {
+const disallowedStates = ["warning", "error", "idle"];
+
+function SidePanel({ status, ...props }) {
+  const noInput = disallowedStates.includes(status);
+
   return (
     <div className="order-2 w-[15%] select-none overflow-y-auto hidden xl:block  self-stretch mt-20  px-4 rounded-lg mr-3 border shadow-lg pt-4">
       <div>
@@ -68,23 +72,33 @@ function SidePanel(props) {
       <div className="flex flex-row space-x-4 w-full mt-4">
         <div className="flex flex-row -space-x-4 w-full">
           <input
+            disabled={noInput}
             placeholder="Go to question"
             inputMode="numeric"
             className={
-              "outline-none w-[80%] text-center inline-block  bg-gray-100  py-3 px-6 text-lg  placeholder:text-[#5522A9]/50 placeholder:text-sm  text-[#5522A9]/80 border rounded-l-xl   border-transparent "
+              "outline-none w-[80%] disabled:opacity-40 disabled:cursor-not-allowed text-center inline-block  bg-gray-100  py-3 px-6 text-lg  placeholder:text-[#5522A9]/50 placeholder:text-sm  text-[#5522A9]/80 border rounded-l-xl   border-transparent "
             }
           />
-          <button className="rounded-xl flex-1  bg-[#5522A9] hover:bg-[#5522A9]/70 transition-colors duration-300 text-white text-base font-bold">
+          <button
+            disabled={noInput}
+            className="rounded-xl flex-1 disabled:opacity-40 disabled:cursor-not-allowed bg-[#5522A9] hover:bg-[#5522A9]/70 transition-colors duration-300 text-white text-base font-bold"
+          >
             <i className="bi-arrow-right text-xl"></i>
           </button>
         </div>
       </div>
 
       <div className="w-full mt-4 space-y-4">
-        <button className="rounded-xl transition-colors duration-300 hover:bg-red-500/80 block w-full p-3  border bg-red-500 text-white text-base font-bold">
+        <button
+          disabled={noInput}
+          className="rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-300 hover:bg-red-500/80 block w-full p-3  border bg-red-500 text-white text-base font-bold"
+        >
           Submit
         </button>
-        <button className="rounded-xl transition-colors duration-300 hover:bg-blue-100 block w-full p-3 text-blue-500 border border-blue-500 bg-white text-base font-bold">
+        <button
+          disabled={noInput}
+          className="rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-300 hover:bg-blue-100 block w-full p-3 text-blue-500 border border-blue-500 bg-white text-base font-bold"
+        >
           Restart
         </button>
       </div>

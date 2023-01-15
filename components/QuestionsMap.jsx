@@ -1,8 +1,11 @@
 import React from "react";
 import cn from "classnames";
 
-function QuestionsMap(props) {
+const disallowedStates = ["warning", "error", "idle"];
+
+function QuestionsMap({ status, activeQ, ...props }) {
   const boxes = [];
+  const noInput = disallowedStates.includes(status);
 
   for (let i = 0; i < props.number_of_questions; ++i) {
     boxes.push(i);
@@ -12,13 +15,19 @@ function QuestionsMap(props) {
     <div className="mt-8 flex flex-row flex-wrap  ">
       {boxes.map((a, i) => (
         <div
+          onClick={() => activeQ.externalSetQ(i)}
           key={i}
-          title={`Q${i + 1} is unattempted`}
+          title={
+            noInput ? "Server unresponsive..." : `Q${i + 1} is unattempted`
+          }
           className={
             " w-[50px]  mr-2 mb-2 text-center text-sm p-1 py-2 rounded-lg cursor-pointer" +
             cn({
               "  bg-[#5522A9] hover:bg-[#5522A9]/90 text-white ": false,
-              " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ": true,
+              " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ":
+                true && !noInput,
+              " blur-sm cursor-not-allowed ": noInput,
+              " border border-[#5522A9]/80 ": activeQ && activeQ.i === i,
             })
           }
         >

@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { loadSession, removeSession } from "../lib/session";
 import { context } from "../store/Provisioner";
 import Head from "next/head";
@@ -113,9 +113,11 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
 
   const { n: redirectTo = "" } = router.query;
 
-  useEffect(() => {
-    setAuth(auth);
-  }, [router.isReady]);
+  const authProp = useMemo(() => auth, [auth]);
+
+  // useEffect(() => {
+  //   setAuth(auth);
+  // }, [router.isReady]);
 
   async function authPipeline() {
     const loadedSession = loadSession();
@@ -149,7 +151,12 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
         router.replace("/portal");
       }
     } else {
-      return <RenderProp auth={auth} />;
+      return (
+        <>
+          <RenderProp auth={authProp} />
+          {/* {console.log("Auth Rendered Prop")} */}
+        </>
+      );
     }
   }
 
