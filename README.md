@@ -1,4 +1,4 @@
-# HydraTest
+# HydraTest (frontend)
 
 <img src="public/assets/hydratest.png" height='200px' alt="Logo"/>
 
