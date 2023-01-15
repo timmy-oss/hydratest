@@ -3,7 +3,12 @@ import { useState } from "react";
 
 const disallowedStates = ["warning", "error", "idle"];
 
-export default function QuestionAnswerSelector({ status, question, ...props }) {
+export default function QuestionAnswerSelector({
+  status,
+  setResponse,
+  question,
+  ...props
+}) {
   const [selected, setSelected] = useState(null);
 
   const noInput = disallowedStates.includes(status);
@@ -13,6 +18,11 @@ export default function QuestionAnswerSelector({ status, question, ...props }) {
       return;
     }
     setSelected(key);
+
+    setResponse({
+      answer: key,
+      qid: question.id,
+    });
   }
 
   return (

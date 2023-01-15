@@ -108,7 +108,7 @@ const SessionController = memo(function ({ auth }) {
         exam &&
         session &&
         session.id && (
-          <div className="bg-white min-h-screen hidden space-x-4 pr-2 md:flex flex-row  justify-around items-center ">
+          <div className="bg-white min-h-screen hidden space-x-4 pr-2 md:flex flex-row  justify-around items-center w-full ">
             <Heartbeat
               session={session}
               auth={auth}

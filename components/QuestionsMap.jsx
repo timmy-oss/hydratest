@@ -7,6 +7,12 @@ function QuestionsMap({ status, activeQ, ...props }) {
   const boxes = [];
   const noInput = disallowedStates.includes(status);
 
+  function selectQ(i) {
+    if (activeQ.i !== i) {
+      activeQ.externalSetQ(i);
+    }
+  }
+
   for (let i = 0; i < props.number_of_questions; ++i) {
     boxes.push(i);
   }
@@ -15,7 +21,7 @@ function QuestionsMap({ status, activeQ, ...props }) {
     <div className="mt-8 flex flex-row flex-wrap  ">
       {boxes.map((a, i) => (
         <div
-          onClick={() => activeQ.externalSetQ(i)}
+          onClick={(e) => selectQ(i)}
           key={i}
           title={
             noInput ? "Server unresponsive..." : `Q${i + 1} is unattempted`
