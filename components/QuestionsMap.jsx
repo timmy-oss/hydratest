@@ -3,8 +3,7 @@ import cn from "classnames";
 
 const disallowedStates = ["warning", "error", "idle"];
 
-function QuestionsMap({ status, activeQ, ...props }) {
-  const boxes = [];
+function QuestionsMap({ status, activeQ, session, ...props }) {
   const noInput = disallowedStates.includes(status);
 
   function selectQ(i) {
@@ -13,34 +12,39 @@ function QuestionsMap({ status, activeQ, ...props }) {
     }
   }
 
-  for (let i = 0; i < props.number_of_questions; ++i) {
-    boxes.push(i);
-  }
-
   return (
-    <div className="mt-8 flex flex-row flex-wrap  ">
-      {boxes.map((a, i) => (
-        <div
-          onClick={(e) => selectQ(i)}
-          key={i}
-          title={
-            noInput ? "Server unresponsive..." : `Q${i + 1} is unattempted`
-          }
-          className={
-            " w-[50px]  mr-2 mb-2 text-center text-sm p-1 py-2 rounded-lg cursor-pointer" +
-            cn({
-              "  bg-[#5522A9] hover:bg-[#5522A9]/90 text-white ": false,
-              " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ":
-                true && !noInput,
-              " blur-sm cursor-not-allowed ": noInput,
-              " border border-[#5522A9]/80 ": activeQ && activeQ.i === i,
-            })
-          }
-        >
-          {" "}
-          {i + 1}{" "}
-        </div>
-      ))}
+    <div className="mt-8  relative flex flex-row flex-wrap justify-start items-center shadow-lg border  min-h-[150px] px-4 pb-6 pt-10 rounded-lg">
+      <span className="inline-block text-xs text-black/60  bg-black/20 rounded-lg py-1 px-2 absolute top-0 left-0">
+        {" "}
+        Question Map{" "}
+      </span>
+      {session.question_ids.map((id, i) => {
+        const attempted = session.attempted_question_ids.includes(id);
+        const isActive = activeQ && activeQ.i === i;
+        return (
+          <div
+            onClick={(e) => selectQ(i)}
+            key={i}
+            title={
+              noInput ? "Server unresponsive..." : `Q${i + 1} is unattempted`
+            }
+            className={
+              " w-[50px]  font-bold mr-2 mb-2 text-center self-stretch max-h-[40px]   text-sm p-1 py-2 rounded-lg cursor-pointer" +
+              cn({
+                "  bg-[#5522A9] hover:bg-[#5522A9]/90 text-white ":
+                  attempted && !isActive,
+                " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ":
+                  (!attempted && !noInput) || (attempted && isActive),
+                " blur-sm cursor-not-allowed ": noInput,
+                " border-2 border-[#5522A9]/80 ": isActive,
+              })
+            }
+          >
+            {" "}
+            {i + 1}{" "}
+          </div>
+        );
+      })}
     </div>
   );
 }

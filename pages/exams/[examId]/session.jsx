@@ -4,7 +4,7 @@ import Header from "../../../components/Header";
 import QuestionsMap from "../../../components/QuestionsMap";
 import SidePanel from "../../../components/SidePanel";
 import QuestionWindow from "../../../components/QuestionWindow";
-import Timer from "../../../components/Timer";
+import WatchTimer from "../../../components/WatchTimer";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import Loader from "../../../components/Loader2";
 import { useRouter } from "next/router";
@@ -24,6 +24,7 @@ const SessionController = memo(function ({ auth }) {
   const [session, setSession] = useState(null);
   const [status, setStatus] = useState("idle");
   const [activeQ, setActiveQ] = useState(null);
+  const [qWindowFetching, setQWindowFetching] = useState(false);
 
   async function getExam() {
     setFetching(true);
@@ -116,13 +117,20 @@ const SessionController = memo(function ({ auth }) {
               status={status}
             />
 
-            <SidePanel status={status} {...exam} />
+            <SidePanel
+              activeQ={activeQ}
+              fetching={qWindowFetching}
+              session={session}
+              status={status}
+              {...exam}
+            />
 
             <div
               style={{ fontFamily: "Montserrat" }}
               className=" px-6 mt-20 self-stretch w-[98%] mx-auto xl:w-[83%]  order-1 border-t border-l border-r xl:border-r-0 rounded-lg py-6"
             >
               <BackToDashboard to="portal" />
+
               <hr className="mb-4" />
 
               <div className="flex flex-row justify-between sticky z-10 top-2 bg-white left-0 right-0 w-full">
@@ -133,10 +141,10 @@ const SessionController = memo(function ({ auth }) {
                   {exam.course.course_title}
                 </h2>
 
-                <Timer
+                <WatchTimer
+                  targetTime={exam.time_allowed}
                   status={status}
                   session={session}
-                  targetTime={exam.time_allowed}
                 />
               </div>
 
@@ -145,6 +153,9 @@ const SessionController = memo(function ({ auth }) {
                 status={status}
                 auth={auth}
                 session={session}
+                setSession={setSession}
+                setQWindowFetching={setQWindowFetching}
+                fetching={qWindowFetching}
                 {...exam}
               />
 

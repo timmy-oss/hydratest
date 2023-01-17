@@ -16,7 +16,7 @@ function Header(props) {
   // console.log(store.auth);
 
   return (
-    <header className="flex flex-row fixed top-0 left-0 right-0 bg-white z-[2] justify-between items-center w-full border-b mb-4 px-4">
+    <header className="hidden md:flex flex-row fixed top-0 left-0 right-0 bg-white z-[2] justify-between items-center w-full border-b mb-4 px-4">
       <div className="   text-[#5823B7]/80 flex flex-row  justify-start">
         <Image
           priority

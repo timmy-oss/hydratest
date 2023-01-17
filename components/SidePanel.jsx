@@ -1,9 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 
 const disallowedStates = ["warning", "error", "idle"];
 
-function SidePanel({ status, ...props }) {
-  const noInput = disallowedStates.includes(status);
+function SidePanel({ status, activeQ, fetching, session, ...props }) {
+  const noInput = disallowedStates.includes(status) || fetching;
+  const [goto, setGoto] = useState("");
+
+  function selectQ(i) {
+    if (activeQ.i !== i) {
+      activeQ.externalSetQ(i);
+    }
+  }
+
+  function handleGoto(e) {
+    e.preventDefault();
+
+    if (!goto) return;
+
+    selectQ(+goto - 1);
+  }
+
+  function handleGotoFieldChange(e) {
+    const v = e.target.value;
+
+    if (v === "") {
+      setGoto("");
+      return;
+    }
+    const isDigit = !isNaN(parseInt(v.charAt(v.length - 1)));
+
+    if (!isDigit) return;
+
+    if (+v > session.question_ids.length || v < 1) return;
+
+    setGoto(v);
+  }
 
   return (
     <div className="order-2 w-[15%] select-none overflow-y-auto hidden xl:block  self-stretch mt-20  px-4 rounded-lg mr-3 border shadow-lg pt-4">
@@ -59,7 +90,7 @@ function SidePanel({ status, ...props }) {
               Attempted
             </p>
             <button className="rounded-xl flex-1 cursor-default  bg-gray-300 text-black/80 text-sm font-normal">
-              0
+              {session.attempted_question_ids.length}
             </button>
           </div>
         </div>
@@ -73,6 +104,8 @@ function SidePanel({ status, ...props }) {
         <div className="flex flex-row -space-x-4 w-full">
           <input
             disabled={noInput}
+            onChange={handleGotoFieldChange}
+            value={goto}
             placeholder="Go to question"
             inputMode="numeric"
             className={
@@ -81,6 +114,7 @@ function SidePanel({ status, ...props }) {
           />
           <button
             disabled={noInput}
+            onClick={handleGoto}
             className="rounded-xl flex-1 disabled:opacity-40 disabled:cursor-not-allowed bg-[#5522A9] hover:bg-[#5522A9]/70 transition-colors duration-300 text-white text-base font-bold"
           >
             <i className="bi-arrow-right text-xl"></i>

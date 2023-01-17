@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import cn from "classnames";
 
-export default function Timer({ targetTime = 61, status = "idle" }) {
+export default function WatchTimer({ targetTime = 61, status = "idle" }) {
   const disallowedStates = ["warning", "error", "idle"];
   const [target, setTarget] = useState(targetTime * 60);
   const [n, setN] = useState(0);
@@ -54,13 +54,13 @@ export default function Timer({ targetTime = 61, status = "idle" }) {
           <i
             title={"Status(" + status + ")"}
             className={
-              "  bi-circle-fill animate-pulse xl:hidden transition-colors duration-300  ml-4  rounded-full " +
+              "  bi-circle-fill  animate-pulse xl:hidden transition-colors duration-300  ml-4  rounded-full " +
               cn({
-                " text-green-500 ": status === "sending",
                 " text-red-500 ": status === "error",
                 " text-green-500 ": status === "success",
-                " text-black/20 ": status === "idle",
+                " text-green-500  ": status === "sending",
                 " text-yellow-500 ": status === "warning",
+                " text-black/20 ": status === "idle",
               })
             }
           >
@@ -73,9 +73,9 @@ export default function Timer({ targetTime = 61, status = "idle" }) {
           className={
             "   hidden xl:inline-block animate-pulse h-[55px] w-[20%] transition-colors duration-300    rounded-r-xl " +
             cn({
-              " bg-green-500 ": status === "sending",
               " bg-red-500 ": status === "error",
               " bg-green-500 ": status === "success",
+              " bg-green-500  ": status === "sending",
               " bg-black/20 ": status === "idle",
               " bg-yellow-500 ": status === "warning",
             })

@@ -2,6 +2,7 @@ import { useEffect, useState, memo } from "react";
 import QuestionAnswerSelector from "./QuestionAnswerSelector";
 import { RpcRequest } from "../lib/rpc";
 import { encryptRsa, decryptRsa } from "../lib/securesession";
+import ProgressX from "./ExamProgressX";
 
 const disallowedStates = ["warning", "error", "idle"];
 
@@ -20,15 +21,21 @@ const QuestionWindow = memo(function ({
   status,
   auth,
   setActiveQ,
+  setSession,
+  fetching,
+  setQWindowFetching: setFetching,
   ...props
 }) {
   const [q, setQ] = useState(null);
-  const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(null);
   const [activeQid, setQid] = useState(session.question_ids[0]);
   const [response, setResponse] = useState(null);
 
   const noInput = disallowedStates.includes(status) || fetching;
+  const progressPercent = session
+    ? (session.attempted_question_ids.length / session.question_ids.length) *
+      100
+    : 0;
 
   function toNextQ() {
     if (fetching) return;
@@ -61,10 +68,6 @@ const QuestionWindow = memo(function ({
     if (i >= 0 && i < session.question_ids.length) {
       setQid(session.question_ids[i]);
     }
-
-    // else {
-    //   console.log(i, "exceeded");
-    // }
   }
 
   // console.log(session);
@@ -97,6 +100,7 @@ const QuestionWindow = memo(function ({
 
     if (res.success) {
       toNextQ();
+      setSession(res.data.session);
     } else {
       setError(res.error.message);
       console.log(res.error);
@@ -156,13 +160,19 @@ const QuestionWindow = memo(function ({
 
       <div
         style={{ fontFamily: "Mulish" }}
-        className="  mt-2 rounded-lg pt-6 shadow-xl border border-gray-100/80"
+        className="relative  mt-2 rounded-lg pt-6 shadow-lg border border-black/10"
       >
+        {(fetching || !q) && (
+          <div className="absolute  -top-2 -right-2 bg-[#5522A9] shadow-lg rounded-full px-2 py-1">
+            <i className="bi-arrow-repeat block animate-spin text-white text-base " />
+          </div>
+        )}
+
         <div className="min-h-[100px]">
           {(fetching && !q) || !q ? (
             <QuestionLoader />
           ) : (
-            <p className="text-black/80 font-normal px-6 text-xl">
+            <p className="text-black/80  font-normal px-6 text-xl">
               {q.question_content}
             </p>
           )}
@@ -175,7 +185,10 @@ const QuestionWindow = memo(function ({
             />
           )}
         </div>
-        <hr className="mt-12" />
+        {/* <hr className="mt-12" /> */}
+
+        <ProgressX progress={progressPercent} />
+
         <div className="relative min-h-[125px]">
           <div className=" absolute bottom-2  right-0 left-0 flex flex-row justify-between  ">
             <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
@@ -215,8 +228,11 @@ const QuestionWindow = memo(function ({
               >
                 <i className="bi-arrow-sync"></i>&nbsp; Attempted &nbsp;{" "}
                 <span className="bg-white  text-sm text-green-500 px-2 py-1 rounded-full">
-                  {" "}
-                  0{" "}
+                  {session.attempted_question_ids.length}
+                </span>
+                <span className="inline-block px-2 ">of</span>
+                <span className="bg-white  text-sm text-green-500 px-2 py-1 rounded-full">
+                  {session.question_ids.length}
                 </span>
               </span>
               <button
