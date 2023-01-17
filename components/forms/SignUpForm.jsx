@@ -367,7 +367,7 @@ export default function SignUpForm(props) {
 
               {signUpMode !== "0" && (
                 <div className="my-2 flex flex-row justify-end">
-                  <Link href="/sign-in">
+                  <Link href="/">
                     <p className="text-sm inline-block text-sky-700/60 underline">
                       Log in to an existing account
                     </p>
