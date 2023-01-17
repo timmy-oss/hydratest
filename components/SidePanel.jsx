@@ -138,8 +138,7 @@ function SidePanel({ status, activeQ, fetching, session, ...props }) {
       </div>
 
       <p className="mt-8 text-center text-xs hover:underline cursor-pointer text-black/50">
-        {" "}
-        Leave feedback{" "}
+        Leave feedback
       </p>
     </div>
   );
