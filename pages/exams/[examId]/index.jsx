@@ -16,7 +16,7 @@ function Intro({ auth }) {
   const [error, setError] = useState(false);
 
   function begin() {
-    router.replace(`/exams/${exam.id}/session`);
+    router.replace(`/exams/${exam.id}/session?intent=new`);
   }
 
   async function getExam() {

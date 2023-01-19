@@ -2,6 +2,8 @@ import { RpcRequest } from "../lib/rpc";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
+const MAX_PING_INTERVAL = 30;
+
 async function sendHeartbeat(auth, session, exam) {
   const body = {
     req: {
@@ -24,6 +26,7 @@ export default function Heartbeat({
   exam,
   setStatus,
   status,
+  setElapsedTime,
   debug = false,
 }) {
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function Heartbeat({
   const [error, setError] = useState(null);
   const [failedReqs, setFailedReqs] = useState(0);
   const [beats, setBeats] = useState(0);
+  const [internalSession, setInternalSession] = useState(session);
 
   let tId;
 
@@ -42,6 +46,8 @@ export default function Heartbeat({
 
     const res = await sendHeartbeat(auth, session, exam);
     if (res.success) {
+      setInternalSession(res.data);
+      setElapsedTime(res.data.elapsed_time);
       setLastPing(Date.now());
       if (failedReqs > 0) {
         setFailedReqs(0);
@@ -55,13 +61,15 @@ export default function Heartbeat({
       setError(res.error.message);
       setFailedReqs(failedReqs + 1);
       if (failedReqs > 2) {
-        setPingInterval(session.ping_interval * (failedReqs - 1));
+        if (!(pingInterval >= MAX_PING_INTERVAL)) {
+          setPingInterval(session.ping_interval * failedReqs);
+        }
 
         setStatus("error");
       } else {
         setStatus("warning");
       }
-      console.log(res.error, "Ping Inteval: ", pingInterval, "s");
+      console.log(res.error, "Ping(", pingInterval, ")");
     }
 
     setBeats(beats + 1);

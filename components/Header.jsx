@@ -57,7 +57,7 @@ function Header(props) {
 
       {store.auth && store.auth.token && (
         <div className="">
-          <div className="flex text-[#5823B7]/80  flex-row justify-around space-x-4 2xl:space-x-8 items-center">
+          <div className="flex text-[#5823B7]/80  flex-row justify-around space-x-12 2xl:space-x-8 items-center">
             <i className="bi-bell text-xl"></i>
             <i className="bi-chat-left text-xl"></i>
             <i className="bi-person-circle text-2xl "></i>

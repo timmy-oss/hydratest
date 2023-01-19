@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import cn from "classnames";
 
-export default function WatchTimer({ targetTime = 61, status = "idle" }) {
+export default function WatchTimer({
+  duration,
+  elapsedTime: elapsed,
+  status = "idle",
+}) {
   const disallowedStates = ["warning", "error", "idle"];
-  const [target, setTarget] = useState(targetTime * 60);
-  const [n, setN] = useState(0);
+  const [useServer, setUseServer] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(duration * 60 - elapsed);
 
   function pd(s) {
     s += "";
@@ -17,28 +21,32 @@ export default function WatchTimer({ targetTime = 61, status = "idle" }) {
   useEffect(() => {
     const t = setTimeout(() => {
       if (disallowedStates.includes(status)) {
-        setN(n + 1);
+        setTimeLeft(timeLeft);
 
         return;
       }
 
-      if (target > 0) {
-        setTarget(target - 1);
-      }
+      if (timeLeft > 0) {
+        const serverTimeLeft = duration * 60 - elapsed;
 
-      setN(n + 1);
+        setTimeLeft(timeLeft - 1);
+      }
     }, 1000);
 
     return () => {
       clearTimeout(t);
     };
-  }, [n]);
+  }, [timeLeft]);
 
-  const h = Math.floor(target / 3600);
-  const m = Math.floor((target % 3600) / 60);
-  const s = Math.floor(target % 60);
+  useEffect(() => {
+    setUseServer(true);
+  }, [elapsed]);
 
-  // console.log(target, h, m, s)
+  const h = Math.floor(timeLeft / 3600);
+  const m = Math.floor((timeLeft % 3600) / 60);
+  const s = Math.floor(timeLeft % 60);
+
+  // console.log(timeLeft, h, m, s)
 
   return (
     <div className="self-center select-none min-w-[250px] pr-2">
@@ -54,7 +62,7 @@ export default function WatchTimer({ targetTime = 61, status = "idle" }) {
           <i
             title={"Status(" + status + ")"}
             className={
-              "  bi-circle-fill  animate-pulse xl:hidden transition-colors duration-300  ml-4  rounded-full " +
+              "  bi-circle-fill  animate-pulse xl:inline-block transition-colors duration-300  ml-4  rounded-full " +
               cn({
                 " text-red-500 ": status === "error",
                 " text-green-500 ": status === "success",
@@ -71,7 +79,7 @@ export default function WatchTimer({ targetTime = 61, status = "idle" }) {
         <span
           title={"Status(" + status + ")"}
           className={
-            "   hidden xl:inline-block animate-pulse h-[55px] w-[20%] transition-colors duration-300    rounded-r-xl " +
+            "   hidden xl:hidden animate-pulse h-[55px] w-[20%] transition-colors duration-300    rounded-r-xl " +
             cn({
               " bg-red-500 ": status === "error",
               " bg-green-500 ": status === "success",

@@ -17,6 +17,7 @@ import Heartbeat from "../../../components/SessionHeartbeat";
 
 const SessionController = memo(function ({ auth }) {
   const router = useRouter();
+  const { intent = "resume" } = router.query;
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
@@ -25,6 +26,7 @@ const SessionController = memo(function ({ auth }) {
   const [status, setStatus] = useState("idle");
   const [activeQ, setActiveQ] = useState(null);
   const [qWindowFetching, setQWindowFetching] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
   async function getExam() {
     setFetching(true);
@@ -54,7 +56,11 @@ const SessionController = memo(function ({ auth }) {
 
   // Secure Session Pipeline
   async function initSession() {
-    const { res, key } = await createSession(router.query.examId, auth.token);
+    const { res, key } = await createSession(
+      router.query.examId,
+      auth.token,
+      intent
+    );
 
     if (res.success) {
       setSession(res.data);
@@ -116,6 +122,7 @@ const SessionController = memo(function ({ auth }) {
               setStatus={setStatus}
               status={status}
               exam={exam}
+              setElapsedTime={setElapsedTime}
             />
 
             <SidePanel
@@ -143,7 +150,8 @@ const SessionController = memo(function ({ auth }) {
                 </h2>
 
                 <WatchTimer
-                  targetTime={exam.time_allowed}
+                  duration={exam.time_allowed}
+                  elapsedTime={elapsedTime}
                   status={status}
                   session={session}
                 />

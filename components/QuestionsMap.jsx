@@ -27,17 +27,19 @@ function QuestionsMap({ status, activeQ, session, ...props }) {
             onClick={(e) => selectQ(i)}
             key={i}
             title={
-              noInput ? "Server unresponsive..." : `Q${i + 1} is unattempted`
+              noInput
+                ? "Server unresponsive..."
+                : `Q${i + 1} is ${!attempted ? "un" : ""}attempted`
             }
             className={
               " w-[50px] border border-black/10 font-bold mr-2 mb-2 text-center self-stretch max-h-[40px]   text-sm p-1 py-2 rounded-lg cursor-pointer" +
               cn({
-                "  bg-[#5522A9] hover:bg-[#5522A9]/90 text-white ":
+                "  bg-[#5522A9]/70 hover:bg-[#5522A9]/60 text-white ":
                   attempted && !isActive,
                 " bg-[#5522A9]/10 hover:bg-[#5522A9]/20  text-[#5522A9] ":
                   (!attempted && !noInput) || (attempted && isActive),
                 " opacity-40 bg-black/30 cursor-not-allowed ": noInput,
-                " border-2 border-[#5522A9]/80 ": isActive,
+                " border-2 border-[#5522A9]/70 ": isActive,
               })
             }
           >
