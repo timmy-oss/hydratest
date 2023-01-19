@@ -68,7 +68,7 @@ const SessionController = memo(function ({ auth }) {
   useEffect(() => {
     if (!router.isReady) return;
 
-    console.log("Ran initSession");
+    // console.log("Ran initSession");
 
     initSession();
   }, [exam]);
@@ -77,7 +77,7 @@ const SessionController = memo(function ({ auth }) {
     if (!router.isReady) return;
     if (exam) return;
 
-    console.log("Ran getExam");
+    // console.log("Ran getExam");
 
     getExam();
   }, [exam]);
@@ -115,6 +115,7 @@ const SessionController = memo(function ({ auth }) {
               auth={auth}
               setStatus={setStatus}
               status={status}
+              exam={exam}
             />
 
             <SidePanel

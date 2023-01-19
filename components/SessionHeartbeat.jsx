@@ -2,7 +2,7 @@ import { RpcRequest } from "../lib/rpc";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-async function sendHeartbeat(auth, session) {
+async function sendHeartbeat(auth, session, exam) {
   const body = {
     req: {
       auth: {
@@ -10,6 +10,7 @@ async function sendHeartbeat(auth, session) {
       },
       body: {
         id: session.id,
+        exam: exam.id,
       },
     },
   };
@@ -20,6 +21,7 @@ async function sendHeartbeat(auth, session) {
 export default function Heartbeat({
   session,
   auth,
+  exam,
   setStatus,
   status,
   debug = false,
@@ -38,7 +40,7 @@ export default function Heartbeat({
       setStatus("sending");
     }
 
-    const res = await sendHeartbeat(auth, session);
+    const res = await sendHeartbeat(auth, session, exam);
     if (res.success) {
       setLastPing(Date.now());
       if (failedReqs > 0) {

@@ -85,7 +85,7 @@ function Exam({ auth }) {
               closeOnError={() => setError(null)}
               id={data && data.length}
               error={error}
-              eMsg="Unable to load courses"
+              eMsg="Unable to load exams"
               errorText="Retry"
             />
           )}

@@ -3,8 +3,28 @@ import QuestionAnswerSelector from "./QuestionAnswerSelector";
 import { RpcRequest } from "../lib/rpc";
 import { encryptRsa, decryptRsa } from "../lib/securesession";
 import ProgressX from "./ExamProgressX";
+import QuestionAnswerInputField from "./QuestionAnswerInputField";
 
 const disallowedStates = ["warning", "error", "idle"];
+
+function interpolateWithComponent(text, placeholder, render) {
+  if (!text.includes(placeholder)) return text;
+
+  const splitTextArr = text.split(placeholder);
+  let addedPlaceholder = false;
+  let interpolatedArr = [];
+
+  for (let item in splitTextArr) {
+    interpolatedArr.push(<span key={item}> {splitTextArr[item]} </span>);
+
+    if (!addedPlaceholder) {
+      interpolatedArr.push(render);
+      addedPlaceholder = true;
+    }
+  }
+
+  return interpolatedArr;
+}
 
 function QuestionLoader() {
   return (
@@ -73,7 +93,7 @@ const QuestionWindow = memo(function ({
   // console.log(session);
 
   async function submitResponse() {
-    if (!response) {
+    if (!response || (response && !response.answer)) {
       toNextQ();
       return;
     }
@@ -92,6 +112,7 @@ const QuestionWindow = memo(function ({
         body: {
           response,
           sessionId: session.id,
+          exam: props.id,
         },
       },
     };
@@ -120,6 +141,7 @@ const QuestionWindow = memo(function ({
         body: {
           id: activeQid,
           sessionId: session.id,
+          exam: props.id,
         },
       },
     };
@@ -128,6 +150,14 @@ const QuestionWindow = memo(function ({
 
     if (res.success) {
       setQ(res.data.question);
+      if (res.data.response) {
+        setResponse({
+          qid: res.data.question.id,
+          answer: res.data.response.response,
+        });
+      } else {
+        setResponse(null);
+      }
     } else {
       setError(res.error.message);
       console.log(res.error);
@@ -145,9 +175,6 @@ const QuestionWindow = memo(function ({
       });
     }
 
-    if (response) {
-      setResponse(null);
-    }
     fetchQ();
   }, [activeQid, session]);
 
@@ -168,19 +195,52 @@ const QuestionWindow = memo(function ({
           </div>
         )}
 
-        <div className="min-h-[100px]">
+        <div className="min-h-[250px] ">
           {(fetching && !q) || !q ? (
             <QuestionLoader />
           ) : (
-            <p className="text-black/80  font-normal px-6 text-xl">
-              {q.question_content}
-            </p>
+            <div className="relative">
+              {q && q.question_type === "objective" && (
+                <p className="text-black/80  font-normal px-6 text-xl">
+                  {q.question_content}
+                </p>
+              )}
+
+              {q && q.question_type === "germane" && (
+                <>
+                  <p className="text-black/80  font-normal px-6 text-xl">
+                    {interpolateWithComponent(
+                      q.question_content,
+                      "%#",
+                      <QuestionAnswerInputField
+                        key={q.id}
+                        response={response}
+                        question={q}
+                        setResponse={setResponse}
+                      />
+                    )}
+                  </p>
+                  <div className="transform grayscale absolute  top-4 left-0 right-0 -rotate-6  opacity-20">
+                    <h1 className="pt-8  text-8xl tracking-widest 2xl:text-9xl font-bold text-[#5522A9]  text-center ">
+                      {" "}
+                      HydraTest
+                    </h1>
+                    <p className="text-center text-xl tracking-widest text-black font-bold pt-4">
+                      {" "}
+                      The ultimate test
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           )}
 
           {q && q.question_type === "objective" && (
             <QuestionAnswerSelector
+              key={q.id}
               setResponse={setResponse}
               question={q}
+              response={response}
               status={status}
             />
           )}

@@ -7,9 +7,10 @@ export default function QuestionAnswerSelector({
   status,
   setResponse,
   question,
+  response,
   ...props
 }) {
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(response && response.answer);
 
   const noInput = disallowedStates.includes(status);
 
