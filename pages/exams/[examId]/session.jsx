@@ -14,6 +14,7 @@ import BackToDashboard from "../../../components/BackToDashboard";
 import { createSession } from "../../../lib/securesession";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import Heartbeat from "../../../components/SessionHeartbeat";
+import SubmitPrompter from "./SubmitPrompter";
 
 const SessionController = memo(function ({ auth }) {
   const router = useRouter();
@@ -27,6 +28,7 @@ const SessionController = memo(function ({ auth }) {
   const [activeQ, setActiveQ] = useState(null);
   const [qWindowFetching, setQWindowFetching] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [autoSubmitExam, setAutoSubmitExam] = useState(false);
 
   async function getExam() {
     setFetching(true);
@@ -71,6 +73,14 @@ const SessionController = memo(function ({ auth }) {
     setInitializing(false);
   }
 
+  // Automatic Submission
+
+  function autoSubmit() {
+    if (!autoSubmitExam) {
+      setAutoSubmitExam(true);
+    }
+  }
+
   useEffect(() => {
     if (!router.isReady) return;
 
@@ -100,6 +110,10 @@ const SessionController = memo(function ({ auth }) {
 
       <InvalidViewportSize />
 
+      {exam && session && session.id && autoSubmitExam && (
+        <SubmitPrompter closeMe={() => setAutoSubmitExam(false)} />
+      )}
+
       {initializing || fetching || (!exam && !error) ? (
         <Loader />
       ) : error ? (
@@ -123,6 +137,7 @@ const SessionController = memo(function ({ auth }) {
               status={status}
               exam={exam}
               setElapsedTime={setElapsedTime}
+              autoSubmit={autoSubmit}
             />
 
             <SidePanel

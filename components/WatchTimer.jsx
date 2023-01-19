@@ -7,8 +7,10 @@ export default function WatchTimer({
   status = "idle",
 }) {
   const disallowedStates = ["warning", "error", "idle"];
-  const [useServer, setUseServer] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(duration * 60 - elapsed);
+  const [timeLeft, setTimeLeft] = useState(duration * 60);
+  const [t, setT] = useState(0);
+
+  const alert = timeLeft <= 60;
 
   function pd(s) {
     s += "";
@@ -21,26 +23,20 @@ export default function WatchTimer({
   useEffect(() => {
     const t = setTimeout(() => {
       if (disallowedStates.includes(status)) {
-        setTimeLeft(timeLeft);
-
+        setT(t + 1);
         return;
       }
 
       if (timeLeft > 0) {
-        const serverTimeLeft = duration * 60 - elapsed;
-
         setTimeLeft(timeLeft - 1);
+        setT(t + 1);
       }
     }, 1000);
 
     return () => {
       clearTimeout(t);
     };
-  }, [timeLeft]);
-
-  useEffect(() => {
-    setUseServer(true);
-  }, [elapsed]);
+  }, [t]);
 
   const h = Math.floor(timeLeft / 3600);
   const m = Math.floor((timeLeft % 3600) / 60);
@@ -49,48 +45,53 @@ export default function WatchTimer({
   // console.log(timeLeft, h, m, s)
 
   return (
-    <div className="self-center select-none min-w-[250px] pr-2">
-      <div className="flex flex-row items-center justify-around  text-4xl bg-[#5522A9]/10 text-[#5522A9] rounded-xl">
-        <div className="flex w-[80%] flex-row justify-center  py-2 transform rotate-0 shadow-[#5522A9]    px-4 ">
-          <i className="bi-stopwatch"></i>&nbsp;
-          {h !== 0 && (
-            <>
-              <span> {pd(h)} </span> &nbsp;:&nbsp;
-            </>
-          )}
-          <span> {pd(m)} </span> &nbsp;:&nbsp; <span> {pd(s)} </span>
-          <i
-            title={"Status(" + status + ")"}
-            className={
-              "  bi-circle-fill  animate-pulse xl:inline-block transition-colors duration-300  ml-4  rounded-full " +
-              cn({
-                " text-red-500 ": status === "error",
-                " text-green-500 ": status === "success",
-                " text-green-500  ": status === "sending",
-                " text-yellow-500 ": status === "warning",
-                " text-black/20 ": status === "idle",
-              })
-            }
-          >
-            {" "}
-          </i>
-        </div>
-
-        <span
-          title={"Status(" + status + ")"}
+    <div className="self-center select-none min-w-[250px] pr-2 ">
+      <div className="flex flex-row justify-around items-center space-x-4">
+        <i
+          title={
+            status === "success"
+              ? "System operational"
+              : status === "warning"
+              ? "System error"
+              : status === "error"
+              ? "System error (critical)"
+              : "System offline"
+          }
           className={
-            "   hidden xl:hidden animate-pulse h-[55px] w-[20%] transition-colors duration-300    rounded-r-xl " +
+            "  bi-circle-fill text-4xl animate-pulse transition-colors duration-300 rounded-full " +
             cn({
-              " bg-red-500 ": status === "error",
-              " bg-green-500 ": status === "success",
-              " bg-green-500  ": status === "sending",
-              " bg-black/20 ": status === "idle",
-              " bg-yellow-500 ": status === "warning",
+              " text-red-500 ": status === "error",
+              " text-green-500 ": status === "success",
+              " text-green-500  ": status === "sending",
+              " text-yellow-500 ": status === "warning",
+              " text-black/20 ": status === "idle",
             })
           }
         >
           {" "}
-        </span>
+        </i>
+
+        <div
+          className={
+            " flex flex-row items-center  justify-around  text-4xl rounded-xl " +
+            cn({
+              "   bg-red-500/80 text-white": timeLeft % 2 === 0 && alert,
+              "  bg-[#5522A9]/10 text-[#5522A9] ": !(
+                timeLeft % 2 === 0 && alert
+              ),
+            })
+          }
+        >
+          <div className="flex w-[80%] flex-row justify-center  py-2 transform rotate-0 shadow-[#5522A9]    px-4 ">
+            <i className="bi-stopwatch"></i>&nbsp;
+            {h !== 0 && (
+              <>
+                <span> {pd(h)} </span> &nbsp;:&nbsp;
+              </>
+            )}
+            <span> {pd(m)} </span> &nbsp;:&nbsp; <span> {pd(s)} </span>
+          </div>
+        </div>
       </div>
     </div>
   );

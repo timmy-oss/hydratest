@@ -28,6 +28,7 @@ export default function Heartbeat({
   status,
   setElapsedTime,
   debug = false,
+  autoSubmit,
 }) {
   const router = useRouter();
   const [lastPing, setLastPing] = useState(null);
@@ -46,8 +47,9 @@ export default function Heartbeat({
 
     const res = await sendHeartbeat(auth, session, exam);
     if (res.success) {
-      setInternalSession(res.data);
-      setElapsedTime(res.data.elapsed_time);
+      setInternalSession(res.data.session);
+      setElapsedTime(res.data.session.elapsed_time);
+
       setLastPing(Date.now());
       if (failedReqs > 0) {
         setFailedReqs(0);
@@ -57,6 +59,12 @@ export default function Heartbeat({
         setPingInterval(session.ping_interval);
       }
       setStatus("success");
+
+      if (res.data.auto_submit && autoSubmit) {
+        setStatus("idle");
+        autoSubmit();
+        return;
+      }
     } else {
       setError(res.error.message);
       setFailedReqs(failedReqs + 1);
