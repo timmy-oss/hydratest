@@ -24,7 +24,7 @@ export default function SubmitPrompter({ closeMe }) {
   return (
     <>
       {" "}
-      <div className="fixed z-20 top-0 right-0 left-0 bottom-0 backdrop-blur-sm w-full"></div>
+      <div className="fixed z-20 top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>
       <div
         style={{ fontFamily: "Mulish" }}
         className={
