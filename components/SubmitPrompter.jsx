@@ -5,7 +5,7 @@ import { RpcRequest } from "../lib/rpc";
 export default function SubmitPrompter({ closeMe, auth, session }) {
   const router = useRouter();
   const [fetching, setFetching] = useState(false);
-
+  const [error, setError] = useState(null);
   const [countDown, setCountDown] = useState(10);
 
   async function submitExam() {
@@ -26,7 +26,7 @@ export default function SubmitPrompter({ closeMe, auth, session }) {
     const res = await RpcRequest("exams.session.submit", body);
 
     if (res.success) {
-      router.replace("/portal");
+      router.replace("/portal?post_submit=true");
     } else {
       closeMe();
       setError(res.error.message);
@@ -56,7 +56,7 @@ export default function SubmitPrompter({ closeMe, auth, session }) {
       <div
         style={{ fontFamily: "Mulish" }}
         className={
-          "absolute top-[20%] z-20 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-white shadow-lg rounded-lg  p-2 "
+          "fixed top-[20%] z-20 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-white shadow-lg rounded-lg  p-2 "
         }
       >
         <div className="mx-auto mt-4 flex flex-col justify-center items-center">

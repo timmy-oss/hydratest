@@ -11,15 +11,12 @@ import InvalidViewportSize from "../../../components/InvalidViewportSize";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import { RpcRequest } from "../../../lib/rpc";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
-import { useRouter } from "next/router";
 
 function Courses({ auth }) {
   const [showForm, setShowForm] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
-  const router = useRouter();
 
   async function fetchCourses() {
     // console.log(auth);
@@ -118,7 +115,7 @@ function Courses({ auth }) {
 
           {/* List of courses  */}
 
-          <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-2  gap-x-4 mt-8">
+          <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
             {data && data.length
               ? data.map((c, i) => {
                   return <CourseCard {...c} key={i} />;

@@ -1,9 +1,9 @@
 import { useEffect, useState, memo } from "react";
 import QuestionAnswerSelector from "./QuestionAnswerSelector";
 import { RpcRequest } from "../lib/rpc";
-import { encryptRsa, decryptRsa } from "../lib/securesession";
 import ProgressX from "./ExamProgressX";
 import QuestionAnswerInputField from "./QuestionAnswerInputField";
+import Image from "next/image";
 
 const disallowedStates = ["warning", "error", "idle"];
 
@@ -220,6 +220,20 @@ const QuestionWindow = memo(function ({
                       />
                     )}
                   </p>
+
+                  {/* Question Illutrsation  */}
+                  {q.illustration && (
+                    <div className=" rounded-lg mt-8 ml-8">
+                      <Image
+                        src={q.illustration}
+                        width="300"
+                        height="200"
+                        alt="Question Illustration"
+                        className="bg-gray-200 rounded-lg"
+                      />
+                    </div>
+                  )}
+
                   <div className="transform grayscale absolute  top-12 left-0 right-0 -rotate-6  opacity-20">
                     <h1 className="pt-8  text-8xl tracking-widest 2xl:text-9xl font-bold text-[#5522A9]  text-center ">
                       {" "}

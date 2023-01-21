@@ -228,7 +228,9 @@ export default function AddOrEditQuestionToCourseForm({
           optionC: values.optionC || null,
           optionD: values.optionD || null,
           lockQuestion: values.lockQuestion,
-          illustration: uploadRes && uploadRes.data.url,
+          illustration: editParams.show
+            ? values.illustrationUrl
+            : uploadRes && uploadRes.data.url,
         },
       },
     };
@@ -379,6 +381,12 @@ export default function AddOrEditQuestionToCourseForm({
                   htmlFor="questionContent"
                 >
                   Question Content
+                  {values.questionType === "germane" && (
+                    <span className="text-xs block pt-1 font-normal text-blue-500">
+                      Use '%#' as a placeholder for when an answer box should
+                      appear within the question.
+                    </span>
+                  )}
                 </label>
                 <Field
                   as="textarea"

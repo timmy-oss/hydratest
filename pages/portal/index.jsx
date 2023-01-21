@@ -1,12 +1,14 @@
-import React from "react";
+import { useRouter } from "next/router";
 import Head from "next/head";
 import Header from "../../components/Header";
 import SideMenu from "../../components/SideMenu";
 import { LineChart, Line } from "recharts";
 import BackToDashboard from "../../components/BackToDashboard";
 import InvalidViewportSize from "../../components/InvalidViewportSize";
+import ProtectedRoute from "../../components/ProtectedRoute";
+import PostSubmissionCard from "../../components/PostSubmissionCard";
 
-function Exam(props) {
+function Portal(props) {
   const graphData = [
     { name: "D1", uv: 4 },
     { name: "D2", uv: 8 },
@@ -16,6 +18,8 @@ function Exam(props) {
     { name: "D3", uv: 16 },
   ];
 
+  const { post_submit = "" } = useRouter().query;
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
       <Head>
@@ -24,6 +28,8 @@ function Exam(props) {
       <Header />
 
       <InvalidViewportSize />
+
+      <PostSubmissionCard show={post_submit === "true"} />
 
       <div className="bg-white md:block hidden min-h-screen   px-4  w-full">
         <SideMenu />
@@ -230,4 +236,4 @@ function Exam(props) {
   );
 }
 
-export default Exam;
+export default ProtectedRoute({ RenderProp: Portal });

@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 function DropDown(props) {
   return (
     <div className="absolute top-0 z-20 shadow-xl border border-black/20 rounded-lg right-0 bg-white/40 min-h-[100px] min-w-[120px] px-2 py-4">
-      <ul className="text-center text-base space-y-2  ">
+      <ul className="text-center text-base space-y-6  ">
         <Link href={`/portal/courses/${props.id}`}>
           <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
             View
@@ -18,9 +18,11 @@ function DropDown(props) {
           </li>
         </Link>
 
-        <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
-          Delete
-        </li>
+        <Link href={`/portal/exams/?action=new`}>
+          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent px-4 hover:border-black/50">
+            Create exam
+          </li>
+        </Link>
       </ul>
     </div>
   );
@@ -62,7 +64,7 @@ export function CourseCardPlaceholder({ active }) {
       style={{
         opacity: op,
       }}
-      className="rounded-lg min-w-[300px] min-h-[300px] bg-black  "
+      className="rounded-lg min-w-[300px] min-h-[200px] bg-black  "
     ></div>
   );
 }
@@ -81,14 +83,14 @@ function CourseCard(props) {
   }, [showDropDown]);
 
   return (
-    <div className="rounded-lg  ">
-      <div className="relative  border rounded-lg">
+    <div className=" rounded-lg  relative border pb-4">
+      <div className="  border rounded-lg">
         <Image
           src={props.course_cover}
-          width={400}
+          width={500}
           height={400}
           alt="Course"
-          className="rounded-lg object-cover"
+          className="rounded-lg object-cover aspect-[16/9]"
         />
         {!showDropDown && (
           <i
@@ -99,9 +101,19 @@ function CourseCard(props) {
 
         {showDropDown && <DropDown {...props} />}
       </div>
-      <span className="relative bottom-[30%] rounded bg-[#5522A9] leading-8 px-2 py-1  text-white font-bold capitalize left-[5%]">
-        {props.course_title}
-      </span>
+
+      <div className="mt-4 py-4 px-2 text-left">
+        <Link href={`/portal/courses/${props.id}`}>
+          <span
+            style={{
+              fontFamily: "Roboto",
+            }}
+            className=" text-2xl rounded  px-2 py-1  text-[#5522A9]  capitalize  hover:underline"
+          >
+            {props.course_title}
+          </span>
+        </Link>
+      </div>
     </div>
   );
 }

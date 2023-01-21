@@ -9,12 +9,9 @@ export default function WatchTimer({
 }) {
   const disallowedStates = ["warning", "error", "idle"];
   const timeRemaining = duration * 60 - (elapsedTime || session.elapsed_time);
-  // console.log(
-  //   timeRemaining,
-  //   duration * 60,
-  //   elapsedTime || session.elapsed_time
-  // );
+
   const [timeLeft, setTimeLeft] = useState(timeRemaining);
+  const [temp, setTemp] = useState(null);
 
   const [t, setT] = useState(0);
 
@@ -29,6 +26,10 @@ export default function WatchTimer({
   }
 
   useEffect(() => {
+    setTemp(true);
+  }, [elapsedTime]);
+
+  useEffect(() => {
     const t = setTimeout(() => {
       if (disallowedStates.includes(status)) {
         setT(t + 1);
@@ -36,7 +37,13 @@ export default function WatchTimer({
       }
 
       if (timeLeft > 0) {
-        setTimeLeft(timeLeft - 1);
+        if (temp) {
+          setTemp(null);
+          setTimeLeft(Math.max(0, timeRemaining - 1));
+        } else {
+          setTimeLeft(Math.max(0, timeLeft - 1));
+        }
+
         setT(t + 1);
       }
     }, 1000);

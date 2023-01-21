@@ -4,8 +4,7 @@ import SideMenu from "../../../components/SideMenu";
 import BackToDashboard from "../../../components/BackToDashboard";
 import CreateExamForm from "../../../components/forms/CreateExamForm";
 import ExamCard, { ExamCardPlaceholder } from "../../../components/ExamCard";
-import { useState, useContext, useEffect } from "react";
-import { context } from "../../../store/Provisioner";
+import { useState, useEffect } from "react";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import { RpcRequest } from "../../../lib/rpc";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
@@ -13,12 +12,11 @@ import { useRouter } from "next/router";
 import InvalidViewportSize from "../../../components/InvalidViewportSize";
 
 function Exam({ auth }) {
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState();
+  const router = useRouter();
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
-  const router = useRouter();
 
   async function fetchExams() {
     // console.log(auth);
@@ -49,6 +47,13 @@ function Exam({ auth }) {
   }
 
   useEffect(() => {
+    if (router.query.action === "new") {
+      setShowForm(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (showForm) return;
     fetchExams();
   }, [showForm, error]);
 
@@ -117,7 +122,7 @@ function Exam({ auth }) {
 
           {/* List of courses  */}
 
-          <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-2  gap-x-4 mt-8">
+          <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
             {data && data.length
               ? data.map((c, i) => {
                   return <ExamCard {...c} key={i} />;

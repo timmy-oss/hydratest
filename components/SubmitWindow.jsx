@@ -5,6 +5,7 @@ import { RpcRequest } from "../lib/rpc";
 export default function SubmitWindow({ closeMe, auth, session }) {
   const router = useRouter();
   const [fetching, setFetching] = useState(false);
+  const [error, setError] = useState(null);
 
   const unattemptedQs =
     session.question_ids.length - session.attempted_question_ids.length;
@@ -27,7 +28,7 @@ export default function SubmitWindow({ closeMe, auth, session }) {
     const res = await RpcRequest("exams.session.submit", body);
 
     if (res.success) {
-      router.replace("/portal");
+      router.replace("/portal?post_submit=true");
     } else {
       closeMe();
       setError(res.error.message);
@@ -43,7 +44,7 @@ export default function SubmitWindow({ closeMe, auth, session }) {
       <div
         style={{ fontFamily: "Mulish" }}
         className={
-          "absolute top-[20%] z-20 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-white shadow-lg rounded-lg  p-2 "
+          "fixed top-[20%] z-20 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-white shadow-lg rounded-lg  p-2 "
         }
       >
         <div className="mx-auto mt-4 flex flex-col justify-center items-center">
@@ -54,9 +55,10 @@ export default function SubmitWindow({ closeMe, auth, session }) {
           Are you sure you want to submit?
         </p>
 
-        {unattemptedQs && (
+        {unattemptedQs > 0 && (
           <p className="px-3 py-1 text-sm font-bold text-center text-red-500  ">
-            (You still have {unattemptedQs} unattempted questions)
+            (You still have {unattemptedQs} unattempted
+            {unattemptedQs > 1 ? " questions" : " question"})
           </p>
         )}
 
