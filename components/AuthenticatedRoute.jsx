@@ -13,7 +13,7 @@ function AuthenticationPendingPage(props) {
   return (
     <div>
       <Head>
-        <title>Working... | {process.env.NEXT_PUBLIC_APP_NAME}</title>
+        <title>{process.env.NEXT_PUBLIC_APP_NAME}</title>
       </Head>
 
       <main className="min-h-screen flex flex-col  justify-center items-center">

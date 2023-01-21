@@ -8,15 +8,33 @@ import { RpcRequest } from "../../../lib/rpc";
 import Loader from "../../../components/Loader2";
 import InvalidViewportSize from "../../../components/InvalidViewportSize";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
+import { createSession } from "../../../lib/securesession";
+import cn from "classnames";
 
 function Intro({ auth }) {
   const router = useRouter();
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
+  const [proceed, setProceed] = useState(0);
+  const [fetching2, setFetching2] = useState(false);
 
-  function begin() {
-    router.replace(`/exams/${exam.id}/session?intent=new`);
+  // Secure Session Pipeline
+  async function initSession() {
+    setFetching2(true);
+    const { res, key } = await createSession(
+      router.query.examId,
+      auth.token,
+      "new"
+    );
+
+    if (res.success) {
+      setProceed(proceed + 1);
+    } else {
+      setError(res.error && res.error.message);
+      console.log(res.error);
+      setFetching2(false);
+    }
   }
 
   async function getExam() {
@@ -52,6 +70,12 @@ function Intro({ auth }) {
     getExam();
   }, [router.isReady, exam]);
 
+  useEffect(() => {
+    if (proceed !== 1) return;
+
+    router.replace(`/exams/${exam.id}/session`);
+  }, [proceed]);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-center ">
       <Head>
@@ -66,7 +90,25 @@ function Intro({ auth }) {
       {fetching || (!exam && !error) ? (
         <>
           <Header />
-          <Loader />
+          <div className=" hidden md:flex min-h-screen bg-no-repeat bg-fixed bg-center bg-clip-content bg-cover bg-[url('/assets/exam2.jpg')] flex-col bg-white justify-center items-center w-full">
+            <div className="   text-[#5823B7] flex flex-row  justify-start">
+              <Image
+                priority
+                src="/assets/hydratest.png"
+                alt="logo"
+                className="object-contain"
+                width="100"
+                height="100"
+              />
+              <h1 className="font-black text-center self-center text-3xl inline-block">
+                HydraTest{" "}
+              </h1>
+            </div>
+
+            <div className=" max-w-xl bg-white/30 min-w-[300px] min-h-[400px]   shadow-xl px-4 rounded-lg  border pt-4 flex flex-col justify-center items-center">
+              <p className="w-[50px] h-[50px] inline-block  border-r-4 border-white rounded-full animate-spin text-center border-y-white border-l-white"></p>
+            </div>
+          </div>
         </>
       ) : error ? (
         <NotifyCard
@@ -136,10 +178,21 @@ function Intro({ auth }) {
 
               <div className=" mt-4 mb-2 w-full">
                 <button
-                  onClick={begin}
-                  className="rounded-lg w-full block hover:bg-[#5522A9]/90 transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold"
+                  disabled={fetching2}
+                  onClick={initSession}
+                  className={
+                    "rounded-lg disabled:bg-opacity-60 w-full block transition-colors duration-300 px-4 py-2  bg-[#5522A9] text-white text-base font-bold " +
+                    cn({
+                      " bg-[#5522A9]/80 ": fetching2,
+                      " bg-[#5522A9] hover:bg-[#5522A9]/90 ": !fetching2,
+                    })
+                  }
                 >
-                  Begin
+                  {fetching2 ? (
+                    <p className="w-[15px] h-[15px] inline-block  border-r-2 border-white rounded-full animate-spin text-center border-y-white border-l-white"></p>
+                  ) : (
+                    "Begin"
+                  )}
                 </button>
               </div>
             </div>

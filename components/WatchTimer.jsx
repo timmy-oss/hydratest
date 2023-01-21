@@ -3,11 +3,19 @@ import cn from "classnames";
 
 export default function WatchTimer({
   duration,
-  elapsedTime: elapsed,
+  elapsedTime,
+  session,
   status = "idle",
 }) {
   const disallowedStates = ["warning", "error", "idle"];
-  const [timeLeft, setTimeLeft] = useState(duration * 60);
+  const timeRemaining = duration * 60 - (elapsedTime || session.elapsed_time);
+  // console.log(
+  //   timeRemaining,
+  //   duration * 60,
+  //   elapsedTime || session.elapsed_time
+  // );
+  const [timeLeft, setTimeLeft] = useState(timeRemaining);
+
   const [t, setT] = useState(0);
 
   const alert = timeLeft <= 60;

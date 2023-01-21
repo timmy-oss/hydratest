@@ -305,6 +305,7 @@ const QuestionWindow = memo(function ({
                 <i className="bi-arrow-clockwise"></i>&nbsp; Restart
               </button>
               <button
+                onClick={props.showSubmitDialog}
                 disabled={noInput}
                 className={
                   " capitalize disabled:opacity-40 disabled:cursor-not-allowed xl:hidden bg-red-500 px-6 rounded-lg hover:bg-red-500/90 rounded-l-md transition-colors duration-300 text-white py-2  block   "

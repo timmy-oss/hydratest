@@ -1,10 +1,38 @@
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { RpcRequest } from "../../../lib/rpc";
 
-export default function SubmitPrompter({ closeMe }) {
+export default function SubmitPrompter({ closeMe, auth, session }) {
+  const router = useRouter();
+  const [fetching, setFetching] = useState(false);
+
   const [countDown, setCountDown] = useState(10);
 
-  function submitExam() {
-    closeMe();
+  async function submitExam() {
+    setFetching(true);
+
+    const body = {
+      req: {
+        auth: {
+          token: auth.token,
+        },
+        body: {
+          exam: router.query.examId,
+          sessionId: session && session.id,
+        },
+      },
+    };
+
+    const res = await RpcRequest("exams.session.submit", body);
+
+    if (res.success) {
+      router.replace("/portal");
+    } else {
+      closeMe();
+      setError(res.error.message);
+      console.log(res.error);
+      setFetching(false);
+    }
   }
 
   useEffect(() => {
@@ -39,15 +67,20 @@ export default function SubmitPrompter({ closeMe }) {
           Oops! Looks like you are out of time.
         </p>
 
-        <p className="px-3 py-1 text-sm text-center text-red-500 font-normal ">
+        <p className="px-3 py-1 text-sm font-bold text-center text-red-500 ">
           Submitting in {countDown}...
         </p>
 
         <button
+          disabled={fetching}
           onClick={submitExam}
           className="block border border-black/40 mt-6 transition-colors mb-2 hover:bg-black/10 w-[60%] mx-auto text-lg outline-none text-black/60 px-2 py-1 rounded-lg "
         >
-          Submit now
+          {fetching ? (
+            <p className="w-[15px] h-[15px] inline-block  border-r-2 border-black/60 rounded-full animate-spin text-center border-y-white border-l-white"></p>
+          ) : (
+            "Submit now"
+          )}
         </button>
       </div>
     </>

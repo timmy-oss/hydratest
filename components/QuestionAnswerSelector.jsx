@@ -32,9 +32,7 @@ export default function QuestionAnswerSelector({
         <div
           onClick={(e) => selectAnswer(l)}
           role="button"
-          title={
-            noInput ? "Server unresponsive..." : "Click to select option " + l
-          }
+          title={noInput ? "Server offline..." : "Click to select option " + l}
           key={i}
           className={
             "rounded-md w-[98%] flex flex-row justify-start space-x-8 items-center  text-left   transition-colors " +

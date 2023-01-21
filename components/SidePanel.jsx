@@ -124,6 +124,7 @@ function SidePanel({ status, activeQ, fetching, session, ...props }) {
 
       <div className="w-full mt-4 space-y-4">
         <button
+          onClick={props.showSubmitDialog}
           disabled={noInput}
           className="rounded-xl disabled:opacity-40 disabled:cursor-not-allowed transition-colors duration-300 hover:bg-red-500/80 block w-full p-3  border bg-red-500 text-white text-base font-bold"
         >

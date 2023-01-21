@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 
 const MAX_PING_INTERVAL = 30;
 
-async function sendHeartbeat(auth, session, exam) {
+async function sendHeartbeat(auth, session, exam, init) {
   const body = {
     req: {
       auth: {
@@ -13,6 +13,7 @@ async function sendHeartbeat(auth, session, exam) {
       body: {
         id: session.id,
         exam: exam.id,
+        init,
       },
     },
   };
@@ -36,18 +37,16 @@ export default function Heartbeat({
   const [error, setError] = useState(null);
   const [failedReqs, setFailedReqs] = useState(0);
   const [beats, setBeats] = useState(0);
-  const [internalSession, setInternalSession] = useState(session);
 
   let tId;
 
-  async function heartbeatReq() {
+  async function heartbeatReq(init = false) {
     if (status === "success") {
       setStatus("sending");
     }
 
-    const res = await sendHeartbeat(auth, session, exam);
+    const res = await sendHeartbeat(auth, session, exam, init);
     if (res.success) {
-      setInternalSession(res.data.session);
       setElapsedTime(res.data.session.elapsed_time);
 
       setLastPing(Date.now());
@@ -98,7 +97,7 @@ export default function Heartbeat({
     }
 
     if (beats === 0) {
-      await heartbeatReq();
+      await heartbeatReq(true);
     }
     tId = setTimeout(heartbeatReq, pingInterval * 1000);
   }

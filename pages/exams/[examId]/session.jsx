@@ -15,10 +15,10 @@ import { createSession } from "../../../lib/securesession";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import Heartbeat from "../../../components/SessionHeartbeat";
 import SubmitPrompter from "./SubmitPrompter";
+import SubmitWindow from "./SubmitWindow";
 
 const SessionController = memo(function ({ auth }) {
   const router = useRouter();
-  const { intent = "resume" } = router.query;
   const [exam, setExam] = useState(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState(false);
@@ -27,8 +27,13 @@ const SessionController = memo(function ({ auth }) {
   const [status, setStatus] = useState("idle");
   const [activeQ, setActiveQ] = useState(null);
   const [qWindowFetching, setQWindowFetching] = useState(false);
-  const [elapsedTime, setElapsedTime] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(null);
   const [autoSubmitExam, setAutoSubmitExam] = useState(false);
+  const [showSubmitWindow, setShowSubmitWindow] = useState(false);
+
+  function showSubmitDialog() {
+    setShowSubmitWindow(true);
+  }
 
   async function getExam() {
     setFetching(true);
@@ -57,11 +62,11 @@ const SessionController = memo(function ({ auth }) {
   }
 
   // Secure Session Pipeline
-  async function initSession() {
+  async function connectSession() {
     const { res, key } = await createSession(
       router.query.examId,
       auth.token,
-      intent
+      "resume"
     );
 
     if (res.success) {
@@ -84,9 +89,9 @@ const SessionController = memo(function ({ auth }) {
   useEffect(() => {
     if (!router.isReady) return;
 
-    // console.log("Ran initSession");
+    // console.log("Ran connectSession");
 
-    initSession();
+    connectSession();
   }, [exam]);
 
   useEffect(() => {
@@ -111,7 +116,19 @@ const SessionController = memo(function ({ auth }) {
       <InvalidViewportSize />
 
       {exam && session && session.id && autoSubmitExam && (
-        <SubmitPrompter closeMe={() => setAutoSubmitExam(false)} />
+        <SubmitPrompter
+          session={session}
+          auth={auth}
+          closeMe={() => setAutoSubmitExam(false)}
+        />
+      )}
+
+      {exam && session && session.id && showSubmitWindow && (
+        <SubmitWindow
+          auth={auth}
+          session={session}
+          closeMe={() => setShowSubmitWindow(false)}
+        />
       )}
 
       {initializing || fetching || (!exam && !error) ? (
@@ -145,6 +162,7 @@ const SessionController = memo(function ({ auth }) {
               fetching={qWindowFetching}
               session={session}
               status={status}
+              showSubmitDialog={showSubmitDialog}
               {...exam}
             />
 
@@ -180,6 +198,7 @@ const SessionController = memo(function ({ auth }) {
                 setSession={setSession}
                 setQWindowFetching={setQWindowFetching}
                 fetching={qWindowFetching}
+                showSubmitDialog={showSubmitDialog}
                 {...exam}
               />
 
