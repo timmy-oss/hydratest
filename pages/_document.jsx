@@ -8,12 +8,12 @@ export default function Document() {
         <meta name="author" content="Timileyin Pelumi" />
         <meta
           name="theme-color"
-          content="#EE3A46"
+          content="#5522A9"
           media="(prefers-color-scheme: light)"
         />
         <meta
           name="theme-color"
-          content="#EE3A46"
+          content="#5522A9"
           media="(prefers-color-scheme: dark)"
         />
         {/* <link rel="manifest" href="/manifest.json" /> */}
