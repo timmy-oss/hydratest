@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import { RpcRequest } from "../../../lib/rpc";
+import { RpcRequest } from "../lib/rpc";
 
 export default function SubmitWindow({ closeMe, auth, session }) {
   const router = useRouter();

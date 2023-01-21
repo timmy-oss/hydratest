@@ -14,8 +14,8 @@ import BackToDashboard from "../../../components/BackToDashboard";
 import { createSession } from "../../../lib/securesession";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
 import Heartbeat from "../../../components/SessionHeartbeat";
-import SubmitPrompter from "./SubmitPrompter";
-import SubmitWindow from "./SubmitWindow";
+import SubmitPrompter from "../../../components/SubmitPrompter";
+import SubmitWindow from "../../../components/SubmitWindow";
 
 const SessionController = memo(function ({ auth }) {
   const router = useRouter();
