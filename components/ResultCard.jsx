@@ -61,6 +61,10 @@ function ResultCard(props) {
         <p> Incorrect Attempts : {props.incorrect_attempts} </p>
         <p> Score : {props.score} </p>
         <p> Remark : {props.remark} </p>
+        <p>
+          {" "}
+          Generated on : {new Date(props.created * 1000).toLocaleString()}{" "}
+        </p>
       </div>
     </div>
   );
