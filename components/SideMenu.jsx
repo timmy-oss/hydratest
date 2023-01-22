@@ -35,7 +35,7 @@ const menuList = [
   {
     title: "Settings",
     icon: "bi-gear",
-    url: "/settings",
+    url: "/preferences",
   },
 ];
 

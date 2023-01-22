@@ -112,7 +112,7 @@ export default function CreateCourseForm({ close }) {
   }
 
   return (
-    <div className="overflow-y-auto max-h-[800px] pb-24 no-scrollbar">
+    <div className="overflow-y-auto  pb-36 no-scrollbar">
       {(data || error) && (
         <NotifyCard
           closeOnError={() => setError(null)}
@@ -122,7 +122,7 @@ export default function CreateCourseForm({ close }) {
           eMsg="Unable to add course"
           successText="Close"
           successCallback={() => {
-            setData(null);  
+            setData(null);
             close();
           }}
         />

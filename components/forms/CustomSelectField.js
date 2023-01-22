@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ErrorMessage } from "formik";
 import cn from "classnames";
 import { RpcRequest } from "../../lib/rpc";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 export default function CustomSelect({
   defaultValue = null,
@@ -9,7 +10,6 @@ export default function CustomSelect({
   name,
   error: fError,
   setValue,
-  options,
   showNullOption = true,
   auth,
   params = {
@@ -31,6 +31,7 @@ export default function CustomSelect({
       setError(null);
     }
   }
+  const ref = useDetectClickOutside({ onTriggered: () => setIsOpen(false) });
 
   function setI(v) {
     if (
@@ -70,7 +71,7 @@ export default function CustomSelect({
     if (res.success) {
       setData(res.data.reverse());
 
-      //   console.log(res.data);
+      // console.log(res.data);
     } else {
       setError(res.error.message);
       toggleOpen();
@@ -89,6 +90,7 @@ export default function CustomSelect({
   return (
     <>
       <div
+        ref={ref}
         onClick={toggleOpen}
         className={
           "relative mt-2 w-full border  flex flex-row justify-between items-center bg-white   rounded-md py-4 px-4 cursor-default " +
@@ -99,7 +101,11 @@ export default function CustomSelect({
         }
       >
         <span className="text-sm  first-letter:uppercase block w-full lg:w-[80%] truncate  text-black/60 ">
-          {selected ? selected[params.nameKey] : "Select an option"}
+          {selected
+            ? selected[params.nameKey]
+              ? selected[params.nameKey]
+              : `${name} - ${selected[params.valueKey]}`
+            : "Select an option"}
         </span>
 
         <i className="bi-chevron-down text-lg text-black/60 absolute top-[25%] right-[5%]" />
@@ -112,7 +118,7 @@ export default function CustomSelect({
               "absolute bg-white px-2 rounded-md  w-full py-2 overflow-y-auto hide-scroll-bar z-10 top-[95%]  left-0 border shadow-xl min-h-[100px] max-h-[180px] space-y-1 "
             }
           >
-            {!fetching && showNullOption && (
+            {data && showNullOption && (
               <div
                 className="truncate cursor-pointer hover:bg-gray-200 px-2 py-1 rounded"
                 onClick={(e) => setI("")}
@@ -132,7 +138,7 @@ export default function CustomSelect({
                     onClick={(e) => setI(c)}
                   >
                     <span className="capitalize text-black/60 truncate  text-sm ">
-                      {c[params.nameKey]}
+                      {c[params.nameKey] || `${name} - ${c[params.valueKey]}`}
                     </span>
                   </div>
                 );

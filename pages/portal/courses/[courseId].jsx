@@ -4,8 +4,7 @@ import SideMenu from "../../../components/SideMenu";
 import BackToDashboard from "../../../components/BackToDashboard";
 import AddQuestionToCourseForm from "../../../components/forms/AddQuestionToCourseForm";
 
-import { useState, useContext, useEffect } from "react";
-import { context } from "../../../store/Provisioner";
+import { useState, useEffect } from "react";
 import ProtectedRoute from "../../../components/ProtectedRoute";
 import { RpcRequest } from "../../../lib/rpc";
 import { NotifyCard } from "../../../components/forms/SignUpForm";
@@ -129,23 +128,6 @@ function Course({ auth }) {
       <div className="bg-white  min-h-screen hidden md:block  px-4  w-full">
         <SideMenu />
         <Header />
-
-        {/* Add New Question To Course Form  */}
-
-        {(showForm || questionEdit.show) && (
-          <>
-            <div className="fixed top-0 right-0 left-0 bottom-0 bg-black/40 z-10"></div>
-
-            <div className="fixed min-h-[600px] top-10 rounded-lg right-0 left-0  z-10 max-w-md mx-auto bg-white">
-              <AddQuestionToCourseForm
-                editParams={questionEdit}
-                course={course}
-                close={closeForm}
-              />
-            </div>
-          </>
-        )}
-
         <div
           style={{ fontFamily: "Montserrat" }}
           className=" p-6 mt-20 ml-[16%] w-[84%] overflow-auto self-start  order-2  border rounded-lg relative"
@@ -164,46 +146,58 @@ function Course({ auth }) {
 
           <hr className="mb-4" />
 
-          {/* Dashboard Content  */}
+          {/* Add New Question To Course Form  */}
 
-          <div className="flex flex-col justify-center text-left    items-start space-y-2">
-            <div className="rounded-lg flex flex-row justify-between items-center p-6 py-12 bg-[#5522A9] w-full ">
-              <h2 className="text-3xl capitalize text-white font-bold text-left ">
-                {" "}
-                {course.course_title}
-              </h2>
-
-              <div
-                onClick={(e) => setShowForm(true)}
-                className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors"
-              >
-                <span className="inline-block align-bottom text-sm">
-                  {" "}
-                  <i className="bi-plus text-xl "></i> Add new question
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Course Details  */}
-
-          {questions && !fetching2 ? (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
-              {questions.map((q, i) => (
-                <CourseQuestionCard
-                  key={i}
-                  {...q}
-                  {...auth}
-                  editQuestion={handleEditQuestion}
-                />
-              ))}
-            </div>
+          {showForm || questionEdit.show ? (
+            <AddQuestionToCourseForm
+              editParams={questionEdit}
+              course={course}
+              close={closeForm}
+            />
           ) : (
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((p, i) => (
-                <CourseQuestionCardPlaceholder key={i} active={fetching2} />
-              ))}
-            </div>
+            <>
+              {/* Dashboard Content  */}
+
+              <div className="flex flex-col justify-center text-left    items-start space-y-2">
+                <div className="rounded-lg flex flex-row justify-between items-center p-6 py-12 bg-[#5522A9] w-full ">
+                  <h2 className="text-3xl capitalize text-white font-bold text-left ">
+                    {" "}
+                    {course.course_title}
+                  </h2>
+
+                  <div
+                    onClick={(e) => setShowForm(true)}
+                    className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors"
+                  >
+                    <span className="inline-block align-bottom text-sm">
+                      {" "}
+                      <i className="bi-plus text-xl "></i> Add new question
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Course Details  */}
+
+              {questions && !fetching2 ? (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
+                  {questions.map((q, i) => (
+                    <CourseQuestionCard
+                      key={i}
+                      {...q}
+                      {...auth}
+                      editQuestion={handleEditQuestion}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mt-8">
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map((p, i) => (
+                    <CourseQuestionCardPlaceholder key={i} active={fetching2} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

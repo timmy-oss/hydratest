@@ -45,12 +45,11 @@ export function NotifyCard({
   }
   return (
     <>
-      <div className="absolute z-10 top-0 right-0 left-0 bottom-0 bg-black/20 w-full"></div>
-
+      <div className="fixed z-10 top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>
       <div
         style={{ fontFamily: "Mulish" }}
         className={
-          "absolute top-[20%] z-10 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2 " +
+          "fixed top-[20%] z-10 right-0 left-0 w-[70%] max-w-xl mx-auto min-h-[200px] bg-gray-100 shadow rounded-lg  p-2 " +
           cn({
             " border border-red-500/40 ": error,
             " border border-green-500/40 ": !error,

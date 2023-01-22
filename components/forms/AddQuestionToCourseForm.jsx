@@ -228,9 +228,10 @@ export default function AddOrEditQuestionToCourseForm({
           optionC: values.optionC || null,
           optionD: values.optionD || null,
           lockQuestion: values.lockQuestion,
-          illustration: editParams.show
-            ? values.illustrationUrl
-            : uploadRes && uploadRes.data.url,
+          illustration:
+            (editParams.show
+              ? values.illustrationUrl
+              : uploadRes && uploadRes.data.url) || null,
         },
       },
     };
@@ -276,7 +277,7 @@ export default function AddOrEditQuestionToCourseForm({
   }
 
   return (
-    <div className="overflow-y-auto max-h-[800px] pb-24 no-scrollbar">
+    <div className="overflow-y-auto  pb-36 no-scrollbar">
       {(data || error) && (
         <NotifyCard
           closeOnError={() => setError(null)}

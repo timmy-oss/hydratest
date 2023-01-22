@@ -11,38 +11,11 @@ import { NotifyCard } from "./SignUpForm";
 import CustomSelect from "./CustomSelectField";
 
 const yupSchema = Yup.object().shape({
-  examTitle: Yup.string()
-    .required("Fill in exam title")
-    .min(8, "Too short!")
-    .max(64, "Uhm, Too long!")
-    .label("Exam Title"),
-
-  courseId: Yup.string()
-    .min(8, "Invalid course ID")
-    .required("Select a course")
-    .label("Course"),
-
-  numberOfQuestions: Yup.number()
-    .integer("Whole numbers only")
-    .positive("Negative numbers are not allowed")
-    .min(5, "Too small!")
-    .max(100, "Too much!")
-    .typeError("Numbers only!")
-    .label("Number of Questions")
-    .required("Fill in number of questions"),
-
-  timeAllowed: Yup.number()
-    .integer("Whole numbers only")
-    .positive("Negative numbers are not allowed")
-    .min(2, "Too small!")
-    .max(3600, "Too much!")
-    .typeError("Numbers only!")
-    .label("Time Allowed")
-    .required("Fill in the time allowed"),
+  sessionKey: Yup.string().min(4).required("Choose a session").label("Session"),
 });
 
-export default function CreateExamForm({ close }) {
-  const { store, dispatch } = useContext(context);
+export default function GenerateResultForm({ close }) {
+  const { store } = useContext(context);
   const [fetching, setFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -64,7 +37,7 @@ export default function CreateExamForm({ close }) {
       },
     };
 
-    const res = await RpcRequest("exams.create", body);
+    const res = await RpcRequest("results.generate", body);
 
     if (res.success) {
       setData(res.data);
@@ -83,8 +56,8 @@ export default function CreateExamForm({ close }) {
           closeOnError={() => setError(null)}
           id={data && data.id}
           error={error}
-          sMsg="Exam added successfully"
-          eMsg="Unable to add exam."
+          sMsg="Result generated successfully."
+          eMsg="Unable to generate result."
           successText="Close"
           successCallback={() => {
             setData(null);
@@ -95,11 +68,9 @@ export default function CreateExamForm({ close }) {
 
       <Formik
         initialValues={{
-          examTitle: "",
-          courseId: "",
-          instantResult: true,
-          numberOfQuestions: "",
-          timeAllowed: "",
+          sessionKey: "",
+          isRegenerated: false,
+          generatePdf: false,
         }}
         onSubmit={handleSubmit}
         validationSchema={yupSchema}
@@ -130,127 +101,54 @@ export default function CreateExamForm({ close }) {
 
               <h2 className="text-xl font-bold  text-left text-black/80">
                 {" "}
-                Add a new exam
+                Generate an exam result
               </h2>
 
               <legend className="text-base  text-black/50 py-4">
-                Fill in the details of the new exam.
+                Choose one of the exams you took recently to generate its result
               </legend>
 
               <div>
                 <label
                   className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="examTitle"
+                  htmlFor="sessionKey"
                 >
-                  Title
-                </label>
-                <Field
-                  className={
-                    "outline-none block  p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
-                    cn({
-                      " border-black/20 ": !errors.examTitle,
-                      "border-red-500/40": errors.examTitle,
-                    })
-                  }
-                  name="examTitle"
-                  id="examTitle"
-                  type="text"
-                  placeholder="Name of exam"
-                />
-
-                <p className="block mb-4  text-xs text-red-500">
-                  <ErrorMessage name="examTitle" />
-                </p>
-              </div>
-
-              <div>
-                <label
-                  className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="courseId"
-                >
-                  Course
+                  Recent sessions
                 </label>
 
                 <CustomSelect
-                  currentValue={values.courseId}
-                  name="courseId"
-                  setValue={(v) => setFieldValue("courseId", v)}
-                  error={errors.courseId}
+                  currentValue={values.sessionKey}
+                  name="session"
+                  setValue={(v) => setFieldValue("sessionKey", v)}
+                  error={errors.sessionKey}
                   auth={auth}
+                  params={{
+                    rpcMethod: "results.get_pending_results",
+                    nameKey: "name",
+                    valueKey: "key",
+                  }}
                 />
-              </div>
-
-              <div>
-                <label
-                  className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="numberOfQuestions"
-                >
-                  Number of Questions
-                </label>
-                <Field
-                  className={
-                    "outline-none block  text-center p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
-                    cn({
-                      " border-black/20 ": !errors.numberOfQuestions,
-                      "border-red-500/40": errors.numberOfQuestions,
-                    })
-                  }
-                  name="numberOfQuestions"
-                  id="numberOfQuestions"
-                  type="text"
-                  placeholder="How many questions"
-                />
-
-                <p className="block mb-4  text-xs text-red-500">
-                  <ErrorMessage name="numberOfQuestions" />
-                </p>
-              </div>
-
-              <div>
-                <label
-                  className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="timeAllowed"
-                >
-                  Time Allowed
-                </label>
-                <Field
-                  className={
-                    "outline-none block text-center p-4 h-[50px] px-6 text-sm my-4  text-black/60 border rounded-md py-2 w-full border-black/20 " +
-                    cn({
-                      " border-black/20 ": !errors.timeAllowed,
-                      "border-red-500/40": errors.timeAllowed,
-                    })
-                  }
-                  name="timeAllowed"
-                  id="timeAllowed"
-                  type="text"
-                  placeholder="Time in minutes"
-                />
-
-                <p className="block mb-4  text-xs text-red-500">
-                  <ErrorMessage name="timeAllowed" />
-                </p>
               </div>
 
               <div className="flex flex-row  space-x-4  py-4">
                 <Field
                   className="outline-none  inline-block  align-baseline"
-                  name="instantResult"
-                  id="instantResult"
+                  name="generatePdf"
+                  id="generatePdf"
                   type="checkbox"
                 />
                 <label
                   className="text-xs select-none text-black/60 font-bold"
-                  htmlFor="instantResult"
+                  htmlFor="generatePdf"
                 >
-                  Show exam results instantly
+                  Generate PDF
                 </label>
               </div>
 
               <div className="mt-8">
                 <input
                   type="submit"
-                  value="Create"
+                  value="Proceed"
                   disabled={!isValid || isSubmitting || fetching}
                   className={
                     " capitalize bg-[#AE90E9]  transition-colors duration-500 text-white py-3 w-full block my-4 rounded-md " +
