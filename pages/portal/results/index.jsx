@@ -112,8 +112,8 @@ function Results({ auth }) {
 
           <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
             {data && data.length > 0
-              ? data.map((sId, i) => {
-                  return <ResultCard key={i} sessionKey={sId} />;
+              ? data.map((d, i) => {
+                  return <ResultCard key={i} {...d} />;
                 })
               : [1, 2, 3, 4, 5, 6, 7, 8, 9].map((a, i) => {
                   return <ResultCardPlaceholder key={i} active={fetching} />;

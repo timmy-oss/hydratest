@@ -45,35 +45,25 @@ export function ResultCardPlaceholder({ active }) {
   );
 }
 
-function ResultCard({ sessionKey, ...props }) {
-  async function getResult(sessionKey) {
-    setFetching(true);
+function ResultCard(props) {
+  return (
+    <div className=" rounded-lg   border p-4 flex flex-col justify-center items-center space-y-6">
+      <div>
+        <i className="bi-file-earmark-check text-7xl text-black" />
+      </div>
 
-    const body = {
-      req: {
-        auth: {
-          token: auth.token,
-        },
-        body: {
-          sessionKey,
-        },
-      },
-    };
-
-    const res = await RpcRequest("result.generate", body);
-
-    if (res.success) {
-      setData(res.data.reverse());
-
-      // console.log(res.data);
-    } else {
-      setError(res.error.message);
-      console.log(res.error);
-    }
-
-    setFetching(false);
-  }
-  return <div className=" rounded-lg   border pb-4"></div>;
+      <div className="space-y-2">
+        <p> Course: {props.course_name} </p>
+        <p> Exam: {props.exam_name} </p>
+        <p> Questions : {props.total_attempts} </p>
+        <p> Attempts : {props.attempts} </p>
+        <p> Correct Attempts : {props.correct_attempts} </p>
+        <p> Incorrect Attempts : {props.incorrect_attempts} </p>
+        <p> Score : {props.score} </p>
+        <p> Remark : {props.remark} </p>
+      </div>
+    </div>
+  );
 }
 
 export default ResultCard;
