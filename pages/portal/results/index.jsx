@@ -99,9 +99,8 @@ function Results({ auth }) {
                     onClick={(e) => setShowForm(true)}
                     className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors"
                   >
-                    <span className="inline-block align-top text-sm">
-                      {" "}
-                      <i className="bi-cloud-download text-xl inline-block mr-1 "></i>{" "}
+                    <span className="inline-block  text-sm">
+                      <i className="bi-file-earmark-medical-fill text-xl "></i>{" "}
                       Generate a result
                     </span>
                   </div>

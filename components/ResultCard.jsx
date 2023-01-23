@@ -52,6 +52,8 @@ function ResultCard(props) {
     if (score >= 71 && score <= 100) return " text-blue-500 ";
   }
 
+  console.log(props);
+
   return (
     <div className=" rounded-lg shadow-xl relative border bg-[#5522A9]  flex flex-col justify-center items-center">
       <div className="absolute top-[30%] transform scale-[1.5]">
@@ -136,14 +138,24 @@ function ResultCard(props) {
             Map
           </span>
 
-          <div className="rounded-lg flex flex-row h-[8px] bg-white mx-auto w-[60%]">
+          <div className="rounded-lg flex flex-row -space-x-2 h-[8px] bg-white mx-auto w-[60%]">
             <div
               style={{ width: `${props.score}%` }}
-              className="bg-green-500 h-[8px] rounded-l-lg"
+              className={
+                "bg-green-500 h-[8px] flex-grow rounded-lg " +
+                cn({
+                  " hidden ": props.score <= 0,
+                })
+              }
             ></div>
             <div
               style={{ width: `${100 - props.score}%` }}
-              className="bg-red-500 h-[8px] rounded-r-lg"
+              className={
+                "bg-red-500 h-[8px] flex-grow rounded-lg " +
+                cn({
+                  " hidden ": 100 - props.score <= 0,
+                })
+              }
             ></div>
           </div>
         </div>
@@ -158,12 +170,14 @@ function ResultCard(props) {
         </p>
       </div>
 
-      <div
-        title="Download as PDF"
-        className="backdrop-blur-sm bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer rounded-lg p-1 absolute bottom-1 right-1"
-      >
-        <i className="bi-file-earmark-arrow-down text-lg text-white "></i>
-      </div>
+      {props.allow_pdf && (
+        <div
+          title="Download as PDF"
+          className="backdrop-blur-sm bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer rounded-lg p-1 absolute bottom-1 right-1"
+        >
+          <i className="bi-file-earmark-arrow-down text-lg text-white "></i>
+        </div>
+      )}
     </div>
   );
 }
