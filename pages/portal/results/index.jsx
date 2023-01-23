@@ -87,38 +87,43 @@ function Results({ auth }) {
           {showForm ? (
             <GenerateResultForm close={() => setShowForm(false)} />
           ) : (
-            <div className="flex flex-col justify-center text-left    items-start space-y-2">
-              <div className="rounded-lg flex flex-row justify-between items-center p-6 py-12 bg-[#5522A9] w-full ">
-                <h2 className="text-3xl text-white font-bold text-left ">
-                  {" "}
-                  Your results
-                </h2>
-
-                <div
-                  onClick={(e) => setShowForm(true)}
-                  className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors"
-                >
-                  <span className="inline-block align-top text-sm">
+            <>
+              <div className="flex flex-col justify-center text-left    items-start space-y-2">
+                <div className="rounded-lg flex flex-row justify-between items-center p-6 py-12 bg-[#5522A9] w-full ">
+                  <h2 className="text-3xl text-white font-bold text-left ">
                     {" "}
-                    <i className="bi-cloud-download text-xl inline-block mr-1 "></i>{" "}
-                    Generate a result
-                  </span>
+                    Your results
+                  </h2>
+
+                  <div
+                    onClick={(e) => setShowForm(true)}
+                    className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors"
+                  >
+                    <span className="inline-block align-top text-sm">
+                      {" "}
+                      <i className="bi-cloud-download text-xl inline-block mr-1 "></i>{" "}
+                      Generate a result
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {/*  List of Sessions  */}
+
+              <div className="grid grid-cols-1 xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
+                {data && data.length > 0
+                  ? data.map((d, i) => {
+                      return <ResultCard key={i} {...d} />;
+                    })
+                  : fetching &&
+                    [1, 2, 3, 4, 5, 6, 7, 8, 9].map((a, i) => {
+                      return (
+                        <ResultCardPlaceholder key={i} active={fetching} />
+                      );
+                    })}
+              </div>
+            </>
           )}
-
-          {/*  List of Sessions  */}
-
-          <div className="grid grid-cols-1  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
-            {data && data.length > 0
-              ? data.map((d, i) => {
-                  return <ResultCard key={i} {...d} />;
-                })
-              : [1, 2, 3, 4, 5, 6, 7, 8, 9].map((a, i) => {
-                  return <ResultCardPlaceholder key={i} active={fetching} />;
-                })}
-          </div>
         </div>
       </div>
     </main>
