@@ -52,7 +52,7 @@ function ResultCard(props) {
     if (score >= 71 && score <= 100) return " text-blue-500 ";
   }
 
-  console.log(props);
+  // console.log(props);
 
   return (
     <div className=" rounded-lg shadow-xl relative border bg-[#5522A9]  flex flex-col justify-center items-center">
@@ -60,7 +60,7 @@ function ResultCard(props) {
         <i className="bi-file-earmark-check text-9xl text-white/10 " />
       </div>
 
-      <div className="space-y-1 bg-black/70 p-1 w-full rounded-lg text-black/60  text-sm">
+      <div className="space-y-1 bg-black/40 p-1 w-full rounded-lg text-black/60  text-sm">
         <p className="w-full  bg-black/40 rounded-lg p-1">
           <span className="px-2  rounded-lg text-white bg-black/40 inline-block mr-2 ">
             Course
