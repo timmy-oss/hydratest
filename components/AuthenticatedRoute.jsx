@@ -115,9 +115,9 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
 
   const authProp = useMemo(() => auth, [auth]);
 
-  // useEffect(() => {
-  //   setAuth(auth);
-  // }, [router.isReady]);
+  useEffect(() => {
+    setAuth(auth);
+  }, [router.isReady]);
 
   async function authPipeline() {
     const loadedSession = loadSession();
@@ -160,11 +160,13 @@ function AuthenticatedRoute({ RenderProp, skipLogin = false }) {
     }
   }
 
+  console.log(router.asPath, router.pathname);
+
   if (authStage === "failed") {
     if (router.pathname === LOGIN_URL) {
       return <RenderProp />;
     } else {
-      router.push(`${LOGIN_URL}?e=001&n=${router.pathname}`);
+      router.push(`${LOGIN_URL}?e=001&n=${router.asPath}`);
     }
   }
 }

@@ -33,7 +33,7 @@ function Provisioner(props) {
       removeSession();
       dispatch({ type: "CLEAR_AUTH" });
 
-      router.push(`${LOGIN_URL}?e=002&&n=${router.pathname}`);
+      router.push(`${LOGIN_URL}?e=002&&n=${router.asPath}`);
     }
   }
 

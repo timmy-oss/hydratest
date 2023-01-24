@@ -1,8 +1,9 @@
 import AuthenticatedRoute from "./AuthenticatedRoute";
+import SecureRoute from "./SecureRoute";
 
 function ProtectedRoute(props) {
   return () => {
-    return <AuthenticatedRoute {...props} />;
+    return <SecureRoute {...props} />;
   };
 }
 

@@ -92,7 +92,7 @@ function Users({ auth }) {
                 Users
               </h2>
 
-              <Link href={`/sign-up?n=${router.pathname}&sm=0`}>
+              <Link href={`/sign-up?n=${router.asPath}&sm=0`}>
                 <div className="text-white font-bold cursor-pointer rounded-lg bg-black/40 py-1 px-2 hover:bg-black/60 transition-colors">
                   <span className="inline-block align-bottom text-sm">
                     {" "}
