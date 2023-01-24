@@ -177,7 +177,7 @@ export default function SecureRoute({ RenderProp, skipLogin, ...props }) {
   useEffect(() => {
     if (!router.isReady) return;
     pipeline();
-  }, [router.isReady]);
+  }, [router.isReady, store.auth.authExpCounter]);
 
   // Render Logic
 
