@@ -29,7 +29,7 @@ function Portal(props) {
 
       <InvalidViewportSize />
 
-      <PostSubmissionCard show={post_submit === "true"} />
+      {post_submit === "true" && <PostSubmissionCard />}
 
       <div className="bg-white md:block hidden min-h-screen   px-4  w-full">
         <SideMenu />

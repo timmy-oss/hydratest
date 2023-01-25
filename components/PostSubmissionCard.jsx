@@ -3,7 +3,7 @@ import { useState } from "react";
 import ConfettiGenerator from "confetti-js";
 import { useEffect } from "react";
 
-export default function PostSubmissionCard({ show, ...props }) {
+export default function PostSubmissionCard(props) {
   const [close, setClose] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ export default function PostSubmissionCard({ show, ...props }) {
     return () => confetti.clear();
   }, []);
 
-  if (!show || close) return null;
+  if (close) return null;
   return (
     <>
       <div className="fixed z-20 top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>

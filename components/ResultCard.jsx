@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import cn from "classnames";
+import PDFDownloader from "./PDFDownloader";
 
 export function ResultCardPlaceholder({ active }) {
   const [op, setOp] = useState(0.1);
   const [f, setF] = useState(true);
-  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     if (!active) return;
@@ -210,14 +209,7 @@ function ResultCard(props) {
         </p>
       </div>
 
-      {props.allow_pdf && (
-        <div
-          title="Download as PDF"
-          className="backdrop-blur-sm bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer rounded-lg p-1 absolute bottom-1 right-1"
-        >
-          <i className="bi-file-earmark-arrow-down text-lg text-white "></i>
-        </div>
-      )}
+      {props.allow_pdf && <PDFDownloader result={props} />}
     </div>
   );
 }
