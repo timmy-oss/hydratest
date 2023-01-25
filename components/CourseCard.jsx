@@ -78,11 +78,11 @@ function CourseCard(props) {
           }}
         >
           {copied ? (
-            <i className="bi-check2 text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+            <i className="bi-check2 border border-white text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
           ) : (
             <i
               title="Copy link"
-              className="bi-link-45deg text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
+              className="bi-link-45deg border border-white text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
             ></i>
           )}
         </CopyToClipboard>
@@ -91,11 +91,11 @@ function CourseCard(props) {
           title="Contribute questions"
           href={`/portal/courses/${props.id}?action=contribute`}
         >
-          <i className="bi-plus text-white text-base absolute top-[12%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+          <i className="bi-plus border border-white text-white text-base absolute top-[12%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
         </Link>
 
         <Link title="View course" href={`/portal/courses/${props.id}`}>
-          <i className="bi-eye text-white text-base absolute top-[24%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+          <i className="bi-eye border border-white text-white text-base absolute top-[24%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
         </Link>
       </div>
 

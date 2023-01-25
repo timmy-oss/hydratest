@@ -197,9 +197,9 @@ export default function CreateCourseForm({ close }) {
 
               <div>
                 {readerReady && (
-                  <div className="relative">
+                  <div className="relative inline-block">
                     <label
-                      className="text-xs select-none  text-black/60 font-bold"
+                      className="text-xs select-none   text-black/60 font-bold"
                       htmlFor="courseCover"
                     >
                       Cover picture
@@ -229,7 +229,7 @@ export default function CreateCourseForm({ close }) {
                           setFieldValue
                         );
                       }}
-                      className=" absolute top-[20%] right-[12%]  hover:bg-black/30 bg-black/20 transition-colors rounded-lg p-1 "
+                      className=" absolute top-[15%] right-[5%]  bg-white/90 hover:bg-white border-black border transition-colors rounded-lg p-1 "
                     >
                       <i className="bi-x text-xl text-black/80 "></i>
                     </button>

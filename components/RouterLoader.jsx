@@ -20,7 +20,7 @@ function RouterLoader({ active = true }) {
       setP(n + 1.5);
       setW(35 - 35 * (Math.max(0, n - w) / m));
       //   console.log(p)
-    }, 5);
+    }, 8);
 
     return () => {
       clearTimeout(id);

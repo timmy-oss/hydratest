@@ -90,7 +90,7 @@ function Provisioner(props) {
 
   return (
     <context.Provider value={{ store, dispatch, logOut }}>
-      <RouterLoader active={showRouterLoader} />
+      <RouterLoader active={true} />
 
       {props.children}
     </context.Provider>

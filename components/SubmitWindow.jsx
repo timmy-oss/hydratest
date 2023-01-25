@@ -40,7 +40,7 @@ export default function SubmitWindow({ closeMe, auth, session }) {
   return (
     <>
       {" "}
-      <div className="fixed z-20 top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>
+      <div className="fixed z-20 backdrop-blur-md top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>
       <div
         style={{ fontFamily: "Mulish" }}
         className={
