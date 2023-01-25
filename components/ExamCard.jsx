@@ -73,8 +73,9 @@ function ExamCard(props) {
           className="rounded-lg object-cover aspect-[16/9]"
         />
         <i
+          title="Take exam"
           onClick={toExam}
-          className="bi-arrow-right  text-sm absolute bottom-[2%] right-[2%] mt-2 cursor-pointer hover:text-black bg-black/90 duration-300 hover:bg-white/70 text-white  transition-colors rounded-full px-2 py-1 "
+          className="bi-chevron-right  text-2xl absolute bottom-[2%] right-[2%] mt-2 cursor-pointer hover:text-black bg-white/50 duration-300  hover:bg-white/70 text-black  transition-colors rounded-full px-2 py-1 "
         ></i>
 
         <div className="absolute text-justify py-2 bottom-0  flex flex-col   space-y-1  px-2  rounded-bl-lg rounded-tr-lg left-0">

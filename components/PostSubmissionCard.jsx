@@ -1,14 +1,28 @@
 import Link from "next/link";
 import { useState } from "react";
+import ConfettiGenerator from "confetti-js";
+import { useEffect } from "react";
 
 export default function PostSubmissionCard({ show, ...props }) {
   const [close, setClose] = useState(false);
 
+  useEffect(() => {
+    const confettiSettings = {
+      target: "my-canvas",
+      start_from_edge: true,
+      clock: 50,
+    };
+    const confetti = new ConfettiGenerator(confettiSettings);
+    confetti.render();
+
+    return () => confetti.clear();
+  }, []);
+
   if (!show || close) return null;
   return (
     <>
-      {" "}
       <div className="fixed z-20 top-0 right-0 left-0 bottom-0 bg-black/60 w-full"></div>
+      <canvas id="my-canvas"></canvas>
       <div
         style={{ fontFamily: "Mulish" }}
         className={

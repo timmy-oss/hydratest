@@ -178,10 +178,14 @@ const QuestionWindow = memo(function ({
     fetchQ();
   }, [activeQid, session]);
 
+  useEffect(() => {
+    window.scrollTo({ behavior: "smooth", top: 150, left: 0 });
+  }, [activeQid]);
+
   return (
     <>
       <p className="text-sm pl-2 text-[#241142]  mt-4 hover:cursor-pointer font-bold">
-        Question{" "}
+        Question
         {(activeQid && session.question_ids.indexOf(activeQid) + 1) || 1}
       </p>
 
@@ -263,7 +267,7 @@ const QuestionWindow = memo(function ({
 
         <ProgressX progress={progressPercent} />
 
-        <div className="relative min-h-[125px]">
+        <div id="questionwindow" className="relative min-h-[125px]">
           <div className=" absolute bottom-2  right-0 left-0 flex flex-row justify-between  ">
             <div className="min-w-[20%] text-sm flex flex-row  space-x-4 px-4 py-4">
               <button

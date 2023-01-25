@@ -73,7 +73,7 @@ function Intro({ auth }) {
   useEffect(() => {
     if (proceed !== 1) return;
 
-    router.replace(`/exams/${exam.id}/session`);
+    router.replace(`/exams/${exam.id}/session#questionwindow`);
   }, [proceed]);
 
   return (

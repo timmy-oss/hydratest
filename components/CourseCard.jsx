@@ -1,32 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
-
-function DropDown(props) {
-  return (
-    <div className="absolute top-0 z-20 shadow-xl border border-black/20 rounded-lg right-0 bg-white/40 min-h-[100px] min-w-[120px] px-2 py-4">
-      <ul className="text-center text-base space-y-6  ">
-        <Link href={`/portal/courses/${props.id}`}>
-          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
-            View
-          </li>
-        </Link>
-
-        <Link href={`/portal/courses/${props.id}?action=contribute`}>
-          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent  hover:border-black/50">
-            Contribute
-          </li>
-        </Link>
-
-        <Link href={`/portal/exams/?action=new`}>
-          <li className="block w-full cursor-pointer hover:bg-white/50 rounded-lg border border-transparent px-4 hover:border-black/50">
-            Create exam
-          </li>
-        </Link>
-      </ul>
-    </div>
-  );
-}
+import { useState, useEffect, useId, forwardRef } from "react";
+import CopyToClipboard from "react-copy-to-clipboard";
+import { useDetectClickOutside } from "react-detect-click-outside";
 
 export function CourseCardPlaceholder({ active }) {
   const [op, setOp] = useState(0.1);
@@ -70,21 +46,17 @@ export function CourseCardPlaceholder({ active }) {
 }
 
 function CourseCard(props) {
-  const [showDropDown, setDropDown] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    if (!showDropDown) return;
+  function closeDrop() {
+    setDropDown(false);
+  }
 
-    let t = setTimeout(() => setDropDown(false), 5000);
-
-    return () => {
-      clearTimeout(t);
-    };
-  }, [showDropDown]);
+  const ref = useDetectClickOutside({ onTriggered: closeDrop });
 
   return (
-    <div className=" rounded-lg  relative border pb-4">
-      <div className="  border rounded-lg">
+    <div className=" rounded-lg  relative border border-black/20 pb-4">
+      <div className="border-b border-black/20 rounded-lg">
         <Image
           src={props.course_cover}
           width={500}
@@ -92,14 +64,39 @@ function CourseCard(props) {
           alt="Course"
           className="rounded-lg object-cover aspect-[16/9]"
         />
-        {!showDropDown && (
-          <i
-            onClick={(e) => setDropDown(true)}
-            className="bi-three-dots-vertical text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/50 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
-          ></i>
-        )}
 
-        {showDropDown && <DropDown {...props} />}
+        <CopyToClipboard
+          text={`${process.env.NEXT_PUBLIC_APP_URL}/portal/courses/${props.id}`}
+          onCopy={() => {
+            setCopied(true);
+            let t;
+            t = setTimeout(() => {
+              setCopied(false);
+
+              clearTimeout(t);
+            }, 2000);
+          }}
+        >
+          {copied ? (
+            <i className="bi-check2 text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+          ) : (
+            <i
+              title="Copy link"
+              className="bi-link-45deg text-white text-base absolute top-0 right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"
+            ></i>
+          )}
+        </CopyToClipboard>
+
+        <Link
+          title="Contribute questions"
+          href={`/portal/courses/${props.id}?action=contribute`}
+        >
+          <i className="bi-plus text-white text-base absolute top-[12%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+        </Link>
+
+        <Link title="View course" href={`/portal/courses/${props.id}`}>
+          <i className="bi-eye text-white text-base absolute top-[24%] right-[2%] mt-2 cursor-pointer hover:bg-black/60 duration-300  transition-colors rounded-full px-2 py-1 bg-black/80"></i>
+        </Link>
       </div>
 
       <div className="mt-4 py-4 px-2 text-left">

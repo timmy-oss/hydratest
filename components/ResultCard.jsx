@@ -52,6 +52,7 @@ function ResultCard(props) {
     if (score >= 71 && score <= 100) return " text-blue-500 ";
   }
 
+  const mapWidth = (props.map_info && (1 / props.total_attempts) * 100) || 0;
   // console.log(props);
 
   return (
@@ -61,6 +62,14 @@ function ResultCard(props) {
       </div>
 
       <div className="space-y-1 bg-black/40 p-1 w-full rounded-lg text-black/60  text-sm">
+        <p className="w-full bg-black/40 rounded-lg p-1">
+          <span className="px-2 rounded-lg bg-black/40 text-white inline-block mr-2">
+            Exam
+          </span>
+          <span className=" capitalize px-2 text-white text-ellipsis font-bold">
+            {props.exam_name}
+          </span>
+        </p>
         <p className="w-full  bg-black/40 rounded-lg p-1">
           <span className="px-2  rounded-lg text-white bg-black/40 inline-block mr-2 ">
             Course
@@ -68,14 +77,6 @@ function ResultCard(props) {
 
           <span className=" capitalize px-2 text-white text-ellipsis  font-bold">
             {props.course_name}{" "}
-          </span>
-        </p>
-        <p className="w-full bg-black/40 rounded-lg p-1">
-          <span className="px-2 rounded-lg bg-black/40 text-white inline-block mr-2">
-            Exam
-          </span>
-          <span className=" capitalize px-2 text-white text-ellipsis font-bold">
-            {props.exam_name}
           </span>
         </p>
         <p className="w-full bg-black/40 rounded-lg p-1">
@@ -119,7 +120,7 @@ function ResultCard(props) {
               " capitalize px-2 text-white font-bold " + scoreColor(props.score)
             }
           >
-            {props.score}
+            {props.score} %
           </span>
         </p>
         <p className="w-full bg-black/40 rounded-lg p-1">
@@ -138,8 +139,47 @@ function ResultCard(props) {
             Map
           </span>
 
-          <div className="rounded-lg flex flex-row -space-x-2 h-[8px] bg-white mx-auto w-[60%]">
-            <div
+          <div className=" flex flex-row  h-[3px] bg-inherit mx-auto w-[60%]">
+            {props.map_info &&
+              props.map_info.map((m, index) => {
+                if (m === "T")
+                  return (
+                    <div
+                      title="Correct"
+                      key={index}
+                      style={{ width: `${mapWidth}%` }}
+                      className={
+                        "bg-green-500 cursor-pointer h-[3px] flex-grow  "
+                      }
+                    ></div>
+                  );
+
+                if (m === "F")
+                  return (
+                    <div
+                      title="Incorrect"
+                      key={index}
+                      style={{ width: `${mapWidth}%` }}
+                      className={
+                        "bg-red-500 cursor-pointer h-[3px] flex-grow  "
+                      }
+                    ></div>
+                  );
+
+                if (m === "N")
+                  return (
+                    <div
+                      title="Unattempted"
+                      key={index}
+                      style={{ width: `${mapWidth}%` }}
+                      className={
+                        "bg-inherit cursor-pointer  h-[3px] flex-grow  "
+                      }
+                    ></div>
+                  );
+              })}
+
+            {/* <div
               style={{ width: `${props.score}%` }}
               className={
                 "bg-green-500 h-[8px] flex-grow rounded-lg " +
@@ -156,7 +196,7 @@ function ResultCard(props) {
                   " hidden ": 100 - props.score <= 0,
                 })
               }
-            ></div>
+            ></div> */}
           </div>
         </div>
 
