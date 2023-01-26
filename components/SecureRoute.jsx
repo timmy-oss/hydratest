@@ -7,7 +7,7 @@ import Loader from "./Loader";
 import { RpcRequest } from "../lib/rpc";
 import Header from "../components/Header";
 
-const LOGIN_URL = "/";
+const LOGIN_URL = "/sign-in";
 
 function AuthenticationPendingPage(props) {
   return (
@@ -203,7 +203,7 @@ export default function SecureRoute({ RenderProp, skipLogin, ...props }) {
     if (router.pathname === LOGIN_URL) {
       return <RenderProp />;
     } else {
-      router.push(`${LOGIN_URL}?e=001&n=${router.asPath}`);
+      router.push(encodeURI(`${LOGIN_URL}?e=001&n=${router.asPath}`));
     }
   }
 }

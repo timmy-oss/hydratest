@@ -11,7 +11,7 @@ const initialState = {
   },
 };
 
-const LOGIN_URL = "/";
+const LOGIN_URL = "/sign-in";
 
 function rootReducer(state, action) {
   return {
@@ -90,7 +90,7 @@ function Provisioner(props) {
 
   return (
     <context.Provider value={{ store, dispatch, logOut }}>
-      <RouterLoader active={true} />
+      <RouterLoader active={showRouterLoader} />
 
       {props.children}
     </context.Provider>

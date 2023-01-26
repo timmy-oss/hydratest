@@ -166,7 +166,7 @@ export default function LogInForm() {
               <legend className="text-base  text-black/50 py-4">
                 {redirectError
                   ? errorCodes.authErrorTexts[redirectError].b
-                  : "Log in to access your courses and exams."}
+                  : "Log in to access courses and exams."}
               </legend>
 
               <div>
@@ -238,7 +238,14 @@ export default function LogInForm() {
               </div>
 
               <div className="my-2 flex flex-row justify-end">
-                <Link href="/sign-up">
+                <Link
+                  href={{
+                    pathname: "/sign-up",
+                    query: {
+                      n: redirectTo || null,
+                    },
+                  }}
+                >
                   <p className="text-sm inline-block text-sky-700/60 underline">
                     Register a new account{" "}
                   </p>

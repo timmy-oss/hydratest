@@ -36,9 +36,9 @@ export function NotifyCard({
         successCallback();
       } else {
         if (n) {
-          router.replace(`/?uid=${id}&nu=true&n=${n}`);
+          router.replace(encodeURI(`/?uid=${id}&nu=true&n=${n}`));
         } else {
-          router.replace(`/?uid=${id}&nu=true`);
+          router.replace(encodeURI(`/?uid=${id}&nu=true`));
         }
       }
     }
@@ -154,7 +154,7 @@ export default function SignUpForm(props) {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  const { sm: signUpMode = "" } = router.query;
+  const { sm: signUpMode = "", n: redirectTo = "" } = router.query;
 
   async function handleSubmit(values) {
     const body = {
@@ -175,7 +175,6 @@ export default function SignUpForm(props) {
     } else {
       // alert(res.error.message);
       console.log(res.error);
-      `2`;
       setError(res.error.message);
     }
 
@@ -366,7 +365,14 @@ export default function SignUpForm(props) {
 
               {signUpMode !== "0" && (
                 <div className="my-2 flex flex-row justify-end">
-                  <Link href="/">
+                  <Link
+                    href={{
+                      pathname: "/sign-in",
+                      query: {
+                        n: redirectTo,
+                      },
+                    }}
+                  >
                     <p className="text-sm inline-block text-sky-700/60 underline">
                       Log in to an existing account
                     </p>

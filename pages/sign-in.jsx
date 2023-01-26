@@ -1,10 +1,10 @@
 import Head from "next/head";
 import Image from "next/image";
 import LoginForm from "../components/forms/LogInForm";
-import ProtectedRoute from "../components/ProtectedRoute"
-import InvalidViewport from "../components/InvalidViewportSize"
+import ProtectedRoute from "../components/ProtectedRoute";
+import InvalidViewport from "../components/InvalidViewportSize";
 
-const Home = () => {
+const SignIn = (props) => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center">
       <Head>
@@ -37,7 +37,4 @@ const Home = () => {
   );
 };
 
-
-
-export default ProtectedRoute({ RenderProp: Home, skipLogin : true  });
-
+export default ProtectedRoute({ RenderProp: SignIn, skipLogin: true });

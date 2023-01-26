@@ -58,7 +58,7 @@ const SessionController = memo(function ({ auth }) {
       console.log(res.error);
     }
 
-    setFetching(false);
+    // setFetching(false);
   }
 
   // Secure Session Pipeline

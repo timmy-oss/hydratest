@@ -7,7 +7,7 @@ import Loader from "./Loader";
 import { RpcRequest } from "../lib/rpc";
 import Header from "../components/Header";
 
-const LOGIN_URL = "/";
+const LOGIN_URL = "/sign-in";
 
 function AuthenticationPendingPage(props) {
   return (
