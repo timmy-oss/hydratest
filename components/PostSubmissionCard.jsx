@@ -2,9 +2,16 @@ import Link from "next/link";
 import { useState } from "react";
 import ConfettiGenerator from "confetti-js";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export default function PostSubmissionCard(props) {
   const [close, setClose] = useState(false);
+  const router = useRouter();
+
+  function toResultsPage() {
+    setClose(true);
+    router.push("/portal/results");
+  }
 
   useEffect(() => {
     const confettiSettings = {
@@ -39,10 +46,12 @@ export default function PostSubmissionCard(props) {
 
         <p className="px-3 py-1 text-sm font-bold text-center text-gray-500 ">
           Visit the{" "}
-          <Link href="/portal/results">
-            {" "}
-            <span className="text-sky-500 hover:underline">results</span>{" "}
-          </Link>{" "}
+          <span
+            onClick={toResultsPage}
+            className="text-sky-500 cursor-pointer hover:underline"
+          >
+            results
+          </span>{" "}
           page to generate your result.
         </p>
 

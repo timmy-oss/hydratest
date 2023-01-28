@@ -9,6 +9,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import CopyToClipboard from "react-copy-to-clipboard";
 
+const LOGIN_URL = "/sign-in";
+
 export function NotifyCard({
   id = "U000000",
   error = false,
@@ -36,9 +38,9 @@ export function NotifyCard({
         successCallback();
       } else {
         if (n) {
-          router.replace(encodeURI(`/?uid=${id}&nu=true&n=${n}`));
+          router.replace(encodeURI(`${LOGIN_URL}?uid=${id}&nu=true&n=${n}`));
         } else {
-          router.replace(encodeURI(`/?uid=${id}&nu=true`));
+          router.replace(encodeURI(`/${LOGIN_URL}?uid=${id}&nu=true`));
         }
       }
     }

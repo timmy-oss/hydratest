@@ -46,7 +46,7 @@ export default function NotFound(props) {
             </p>
 
             <p className="text-sm text-center mx-auto max-w-3xl bg-red-100 px-4 rounded-xl inline-block text-red-500 py-2 ">
-              {location.href}
+              {process.env.NEXT_PUBLIC_APP_URL + router.asPath}
             </p>
           </div>
         </div>
