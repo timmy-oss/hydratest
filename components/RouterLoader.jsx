@@ -30,7 +30,7 @@ function RouterLoader({ active = true }) {
   if (!active) return null;
 
   return (
-    <div className=" bg-white  z-20 fixed top-0 left-0 right-0">
+    <div className="fixed z-20  top-0 right-0 left-0 bottom-0 bg-white/60 w-full">
       <div className="w-full relative  h-[5px]   bg-[#5823B7]/20 rounded">
         <div
           style={{

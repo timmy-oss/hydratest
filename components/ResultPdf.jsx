@@ -73,8 +73,8 @@ export default function ResultPdf(props) {
           >
             <Image
               style={{
-                width: 180,
-                height: 200,
+                width: 150,
+                height: 180,
                 objectFit: "contain",
               }}
               src="/assets/hydratest.png"
@@ -311,8 +311,20 @@ export default function ResultPdf(props) {
                   }}
                   src={`${process.env.NEXT_PUBLIC_APP_URL}/portal`}
                 >
-                  HydraTest Web Application.
+                  HydraTest
                 </Link>
+              </Text>
+
+              <Text
+                style={{
+                  marginTop: "5px",
+                  padding: "5px",
+                  color: "black",
+                  fontSize: "8px",
+                }}
+              >
+                {" "}
+                Downloaded at {new Date().toLocaleString()}{" "}
               </Text>
             </View>
           </View>

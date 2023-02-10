@@ -30,7 +30,7 @@ function Header(props) {
       </div>
 
       <div className="  lg:flex flex-col justify-center items-center flex-1 hidden  ">
-        <div className="relative min-w-[600px]">
+        <div className="relative min-w-[600px] hidden">
           <input
             onChange={handleQChange}
             value={q}
