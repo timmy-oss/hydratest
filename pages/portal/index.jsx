@@ -7,8 +7,16 @@ import BackToDashboard from "../../components/BackToDashboard";
 import InvalidViewportSize from "../../components/InvalidViewportSize";
 import ProtectedRoute from "../../components/ProtectedRoute";
 import PostSubmissionCard from "../../components/PostSubmissionCard";
+import { useEffect, useState } from "react";
+import { RpcRequest } from "../../lib/rpc";
+import { NotifyCard } from "../../components/forms/SignUpForm";
+import Loader from "../../components/Loader2";
 
 function Portal(props) {
+  const [fetching, setFetching] = useState(false);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
   const graphData = [
     { name: "D1", uv: 4 },
     { name: "D2", uv: 8 },
@@ -19,6 +27,36 @@ function Portal(props) {
   ];
 
   const { post_submit = "" } = useRouter().query;
+
+  async function fetchStats() {
+    // console.log(auth);
+
+    const body = {
+      req: {
+        auth: null,
+        body: null,
+      },
+    };
+
+    setFetching(true);
+
+    const res = await RpcRequest("home", body);
+
+    if (res.success) {
+      setData(res.data);
+
+      // console.log(res.data);
+    } else {
+      setError(res.error.message);
+      console.log(res.error);
+    }
+
+    setFetching(false);
+  }
+
+  useEffect(() => {
+    fetchStats();
+  });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center">
@@ -40,6 +78,16 @@ function Portal(props) {
         >
           <BackToDashboard to="Home" url="/" />
 
+          {error && (
+            <NotifyCard
+              closeOnError={() => setError(null)}
+              id={data}
+              error={error}
+              eMsg="Unable to load statistics"
+              errorText="Retry"
+            />
+          )}
+
           <hr className="mb-4" />
 
           {/* Dashboard Content  */}
@@ -52,183 +100,86 @@ function Portal(props) {
               </h2>
             </div>
 
-            <div
-              style={{ fontFamily: "" }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-4  w-full gap-x-4 "
-            >
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">Total users</p>
-                <p className="py-2 text-3xl text-white text-left"> 2,402 </p>
+            {data ? (
+              <div
+                style={{ fontFamily: "" }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-y-4  w-full gap-x-4 "
+              >
+                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">
+                    Total users
+                  </p>
+                  <p className="py-2 text-3xl text-white text-left">
+                    {" "}
+                    {data.user}{" "}
+                  </p>
 
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
+                  <div className="text-4xl font-bold text-center text-white">
+                    <h1> {data.user} </h1>
+                  </div>
                 </div>
 
-                <p className=" text-xs  text-white text-left">
-                  {" "}
-                  ~ 23 new users
-                </p>
-              </div>
+                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">
+                    Total courses
+                  </p>
+                  <p className="py-2 text-3xl text-white text-left">
+                    {" "}
+                    {data.course}{" "}
+                  </p>
 
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">
-                  Total courses
-                </p>
-                <p className="py-2 text-3xl text-white text-left"> 56 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
+                  <div className="text-4xl font-bold text-center text-white">
+                    <h1> {data.course} </h1>
+                  </div>
                 </div>
 
-                <p className=" text-xs  text-white text-left">
-                  ~ 5 new courses
-                </p>
-              </div>
+                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">
+                    Total exams
+                  </p>
+                  <p className="py-2 text-3xl text-white text-left">
+                    {" "}
+                    {data.exam}{" "}
+                  </p>
 
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">Total exams</p>
-                <p className="py-2 text-3xl text-white text-left"> 102 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
+                  <div className="text-4xl font-bold text-center text-white">
+                    <h1> {data.exam} </h1>
+                  </div>
                 </div>
 
-                <p className=" text-xs  text-white text-left">~ 2 new exams</p>
-              </div>
+                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">
+                    Total questions
+                  </p>
+                  <p className="py-2 text-3xl text-white text-left">
+                    {" "}
+                    {data.question}{" "}
+                  </p>
 
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">
-                  {" "}
-                  Active sessions
-                </p>
-                <p className="py-2 text-3xl text-white text-left"> 12,103 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
+                  <div className="text-4xl font-bold text-center text-white">
+                    <h1> {data.question} </h1>
+                  </div>
                 </div>
 
-                <p className=" text-xs  text-white text-left">
-                  ~ 655 new sessions
-                </p>
-              </div>
+                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">
+                    Total results
+                  </p>
+                  <p className="py-2 text-3xl text-white text-left">
+                    {" "}
+                    {data.result}{" "}
+                  </p>
 
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">
-                  {" "}
-                  Results generated{" "}
-                </p>
-                <p className="py-2 text-3xl text-white text-left"> 29,206 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
+                  <div className="text-4xl font-bold text-center text-white">
+                    <h1> {data.result} </h1>
+                  </div>
                 </div>
-
-                <p className=" text-xs  text-white text-left">
-                  ~ 132 new results
-                </p>
               </div>
-
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">Total users</p>
-                <p className="py-2 text-3xl text-white text-left"> 2,402 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
-                </div>
-
-                <p className=" text-xs  text-white text-left">~ 23 new users</p>
-              </div>
-
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">
-                  Total courses
-                </p>
-                <p className="py-2 text-3xl text-white text-left"> 56 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
-                </div>
-
-                <p className=" text-xs  text-white text-left">
-                  ~ 5 new courses
-                </p>
-              </div>
-
-              <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
-                <p className="text-lg  text-left text-white/80">Total users</p>
-                <p className="py-2 text-3xl text-white text-left"> 2,402 </p>
-
-                <div className="">
-                  <LineChart width={250} height={100} data={graphData}>
-                    <Line
-                      dot={false}
-                      strokeWidth={2}
-                      type="linear"
-                      dataKey="uv"
-                      stroke="#ffffff"
-                    />
-                  </LineChart>
-                </div>
-
-                <p className=" text-xs  text-white text-left">~ 23 new users</p>
-              </div>
-            </div>
+            ) : error ? (
+              <p> An error occured. </p>
+            ) : (
+              fetching && <Loader />
+            )}
           </div>
         </div>
       </div>

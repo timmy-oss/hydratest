@@ -161,12 +161,19 @@ function Sessions({ auth }) {
             {fetching ? (
               <Loader />
             ) : error ? (
-              <p> Error </p>
+              <p> An error occured </p>
             ) : (
               data && (
                 <div className="grid grid-cols-1 xl:grid-cols-4  lg:grid-cols-3 md:grid-cols-2  gap-y-4  gap-x-4 mt-8">
                   {data.map((d, i) => {
-                    return <SessionCard key={i} sessionId={d} auth={auth} />;
+                    return (
+                      <SessionCard
+                        key={i}
+                        refresh={() => setSelection(selectionIndex + 1)}
+                        sessionId={d}
+                        auth={auth}
+                      />
+                    );
                   })}
                 </div>
               )

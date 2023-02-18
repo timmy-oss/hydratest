@@ -7,9 +7,15 @@ import { useContext } from "react";
 
 const menuList = [
   {
+    title: "Home",
+    icon: "bi-house-door",
+    url: "",
+  },
+  {
     title: "Users",
     icon: "bi-people",
     url: "/users",
+    disabled: true,
   },
   {
     title: "Courses",
@@ -36,6 +42,7 @@ const menuList = [
     title: "Settings",
     icon: "bi-gear",
     url: "/preferences",
+    disabled: true,
   },
 ];
 
@@ -58,13 +65,15 @@ function SideMenu(props) {
         <h1 className=" self-center text-lg inline-block">HydraTest</h1>
       </div>
 
-      <ul className="space-y-6">
+      <ul className="space-y-12">
         {menuList.map((a, b) => (
           <Link key={b} href={"/portal" + a.url}>
-            <li
+            <button
+              disabled={a.disabled}
+              aria-disabled={a.disabled}
               style={{ fontFamily: "Mulish" }}
               className={
-                "text-base  transition-colors px-6  py-2  mt-4  text-black/60 bg-gray-100 rounded-md text-left " +
+                "text-base w-full disabled:opacity-50 disabled:cursor-not-allowed transition-colors px-6  py-2  mt-4 disabled:hover:bg-gray-100  text-black/60 bg-gray-100 rounded-md text-left " +
                 cn({
                   " border border-black cursor-default":
                     path === "/portal" + a.url,
@@ -78,7 +87,7 @@ function SideMenu(props) {
                 className={a.icon + " text-xl hidden xl:inline-block"}
               ></i>{" "}
               &nbsp;&nbsp;{a.title}
-            </li>
+            </button>
           </Link>
         ))}
       </ul>

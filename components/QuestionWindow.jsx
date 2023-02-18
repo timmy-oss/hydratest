@@ -185,7 +185,7 @@ const QuestionWindow = memo(function ({
   return (
     <>
       <p className="text-sm pl-2 text-[#241142]  mt-4 hover:cursor-pointer font-bold">
-        Question
+        Question{" "}
         {(activeQid && session.question_ids.indexOf(activeQid) + 1) || 1}
       </p>
 
