@@ -105,73 +105,77 @@ function Portal(props) {
                 style={{ fontFamily: "" }}
                 className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-y-4  w-full gap-x-4 "
               >
-                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                   <p className="text-lg  text-left text-white/80">
                     Total users
                   </p>
-                  <p className="py-2 text-3xl text-white text-left">
-                    {" "}
-                    {data.user}{" "}
-                  </p>
 
-                  <div className="text-4xl font-bold text-center text-white">
+                  <div className="text-5xl pt-6 font-bold text-center text-white">
                     <h1> {data.user} </h1>
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                   <p className="text-lg  text-left text-white/80">
                     Total courses
                   </p>
-                  <p className="py-2 text-3xl text-white text-left">
-                    {" "}
-                    {data.course}{" "}
-                  </p>
 
-                  <div className="text-4xl font-bold text-center text-white">
+                  <div className="text-5xl pt-6 font-bold text-center text-white">
                     <h1> {data.course} </h1>
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                   <p className="text-lg  text-left text-white/80">
                     Total exams
                   </p>
-                  <p className="py-2 text-3xl text-white text-left">
-                    {" "}
-                    {data.exam}{" "}
-                  </p>
 
-                  <div className="text-4xl font-bold text-center text-white">
+                  <div className="text-5xl pt-6 font-bold text-center text-white">
                     <h1> {data.exam} </h1>
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                   <p className="text-lg  text-left text-white/80">
                     Total questions
                   </p>
-                  <p className="py-2 text-3xl text-white text-left">
-                    {" "}
-                    {data.question}{" "}
-                  </p>
 
-                  <div className="text-4xl font-bold text-center text-white">
+                  <div className="text-5xl pt-6 font-bold text-center text-white">
                     <h1> {data.question} </h1>
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-[#5522A9] px-4 max-w-[300px] min-h-[100px] py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
                   <p className="text-lg  text-left text-white/80">
                     Total results
                   </p>
-                  <p className="py-2 text-3xl text-white text-left">
-                    {" "}
-                    {data.result}{" "}
-                  </p>
 
-                  <div className="text-4xl font-bold text-center text-white">
+                  <div className="text-5xl pt-6 font-bold text-center text-white">
                     <h1> {data.result} </h1>
+                  </div>
+                </div>
+
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">Frontend</p>
+
+                  <div className="text-2xl pt-6 font-bold text-center text-white">
+                    <h1> NextJS/React </h1>
+                  </div>
+                </div>
+
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">Backend</p>
+
+                  <div className="text-2xl pt-6 font-bold text-center text-white">
+                    <h1> FastAPI/Python </h1>
+                  </div>
+                </div>
+
+                <div className="rounded-lg   min-h-[200px] bg-[#5522A9] px-4 max-w-[300px]  py-4 flex-1 border  border-[#5522A9]/20 shadow-2xl">
+                  <p className="text-lg  text-left text-white/80">Database</p>
+
+                  <div className="text-2xl pt-6 font-bold text-center text-white">
+                    <h1> RedisJSON/Redis </h1>
                   </div>
                 </div>
               </div>

@@ -101,10 +101,46 @@ function SideMenu(props) {
         </button>
       </div>
 
-      <p className="mt-8 text-center text-xs hover:underline cursor-pointer text-black/50">
-        {" "}
-        Leave feedback{" "}
+      <p className="mt-4 text-center text-xs italic cursor-pointer text-stone-700">
+        Developed by <span className="font-bold "> Timileyin Pelumi </span>
       </p>
+
+      <div className="space-x-2 flex  flex-row justify-around items-center">
+        <a
+          target="_blank"
+          href="https://twitter.com/timmypelumy"
+          className="mt-2  text-center text-xs hover:underline cursor-pointer text-sky-500"
+        >
+          {" "}
+          <i className="bi-twitter"></i> Twitter
+        </a>
+
+        <a
+          target="_blank"
+          href="https://github.com/timmy-oss"
+          className="mt-2  text-center text-xs hover:underline cursor-pointer text-sky-500"
+        >
+          {" "}
+          <i className="bi-github"></i> Github
+        </a>
+
+        <a
+          target="_blank"
+          href="https://linkedin.com/in/timmypelumy"
+          className="mt-2  text-center text-xs hover:underline cursor-pointer text-sky-500"
+        >
+          {" "}
+          <i className="bi-linkedin"></i> LinkedIn
+        </a>
+      </div>
+
+      <a
+        href="https://github.com/timmy-oss/hydratest/issues/new"
+        target="_blank"
+        className="mt-4 block text-center text-xs hover:underline cursor-pointer text-black/50"
+      >
+        Leave feedback
+      </a>
     </div>
   );
 }
