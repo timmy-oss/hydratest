@@ -4,7 +4,7 @@
 
 **HydraTest is a digital test solution inspired by FUTA TruTest.**
 
-**Live preview [here](https://hydratest.vercel.app).**
+**Live preview [here](https://pp1.timmypelumy.dev).**
 
 > Project Completed and Closed 💥
 
