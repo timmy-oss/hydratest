@@ -11,7 +11,7 @@
     "confetti-js": "^0.0.18",
     "formik": "^2.2.9",
     "nanoid": "^4.0.0",
-    "next": "latest",
+    "next": "12.3.0",
     "node-rsa": "^1.1.1",
     "react": "18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
