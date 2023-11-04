@@ -135,7 +135,7 @@ function SideMenu(props) {
       </div>
 
       <a
-        href="https://github.com/timmy-oss/hydratest/issues/new"
+        href="https://github.com/timmypelumy/hydratest/issues/new"
         target="_blank"
         className="mt-4 block text-center text-xs hover:underline cursor-pointer text-black/50"
       >
