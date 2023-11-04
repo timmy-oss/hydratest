@@ -117,7 +117,7 @@ function SideMenu(props) {
 
         <a
           target="_blank"
-          href="https://github.com/timmy-oss"
+          href="https://github.com/timmypelumy"
           className="mt-2  text-center text-xs hover:underline cursor-pointer text-sky-500"
         >
           {" "}
